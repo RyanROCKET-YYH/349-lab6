@@ -37,14 +37,12 @@ int main( void ) {
     adc_init();
     keypad_init();
     i2c_master_init(80);
-    // timer_init(3, 100, 16);
-    // gpio_init(GPIO_B, 4, MODE_ALT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
+    timer_init(3, 100, 16);
+    gpio_init(GPIO_B, 4, MODE_ALT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
     
-    // timer_start_pwm(3, 1, 100, 16, 8);
-    gpio_init(GPIO_A, 10, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
-    // SERVO 2 (A1)
-    // gpio_init(GPIO_A, 1, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
-    servo_enable(0, 1);
+    timer_start_pwm(3, 1, 100, 16, 2);
+    // timer_set_duty_cycle(3,1, 16);
+   
     for (;;) {}
     return 0;
 }

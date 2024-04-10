@@ -29,12 +29,12 @@
 #define TIM_CCER_CC4E (1 << 12)
 #define TIM_CCER_CC4P (1 << 13)
 
-struct tim2_5* const timer_base[] = {(void *)0x0,   // N/A - Don't fill out
-                                     (void *)0x0,   // N/A - Don't fill out
-                                     (void *)-1,    // TODO: fill out address for TIMER 2
-                                     (void *)-1,    // TODO: fill out address for TIMER 3
-                                     (void *)-1,    // TODO: fill out address for TIMER 4
-                                     (void *)-1};   // TODO: fill out address for TIMER 5
+struct tim2_5* const timer_base[] = {(void *)0x0,    // N/A - Don't fill out
+                                     (void *)0x0,    // N/A - Don't fill out
+                                     (void *)0x40000000, // TIMER 2 Base Address
+                                     (void *)0x40000400, // TIMER 3 Base Address
+                                     (void *)0x40000800, // TIMER 4 Base Address
+                                     (void *)0x40000C00};  // TIMER 5 Base Address
 
 /**
  *

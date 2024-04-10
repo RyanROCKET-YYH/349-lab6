@@ -31,6 +31,7 @@ struct tim2_5 {
   volatile uint32_t or; /**< 50 Option Register */
 };
 
+extern struct tim2_5* const timer_base[];
 
 void timer_start_pwm(int timer, uint32_t channel, uint32_t prescalar, uint32_t period, uint32_t duty_cycle);
 

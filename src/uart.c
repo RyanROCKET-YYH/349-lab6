@@ -13,7 +13,6 @@
 #include <unistd.h>
 #include <rcc.h>
 #include <uart.h>
-#include <uart_polling.h>
 #include <nvic.h>
 #include <gpio.h>
 

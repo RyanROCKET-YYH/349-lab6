@@ -12,7 +12,7 @@
 #include <gpio.h>
 #include <timer.h>
 #include <nvic.h>
-#include <printk.h>
+#include <stdio.h>
 
 /** @brief define UNUSE for unuse parameters */
 #define UNUSED __attribute__((unused))
@@ -134,7 +134,7 @@ void tim5_irq_handler() {
  */
 int servo_enable(UNUSED uint8_t channel, UNUSED uint8_t enabled){
     if (channel != 0 && channel != 1) {
-        printk("Invalid Channel\n");
+        printf("Invalid Channel\n");
         return -1;
     }
 

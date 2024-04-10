@@ -13,7 +13,7 @@ SYMLINK = lns -af
 
 ############### LIBRARY INCLUSION ######################
 
-FLOAT           = hard
+FLOAT           = soft
 DEBUG           = 1
 
 PROJ             = lab6

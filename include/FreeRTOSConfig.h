@@ -21,10 +21,14 @@
 #define configQUEUE_REGISTRY_SIZE               ( 8 )
 #define configIDLE_SHOULD_YIELD                 1
 
-#define configCPU_CLOCK_HZ                      ( 16000000 )
-#define configTICK_RATE_HZ                      ( 250 )
-#define configMINIMAL_STACK_SIZE                ( 256 )
-#define configTOTAL_HEAP_SIZE                   ( 10 * 1024 )
+/* TODO: add CPU clock frequency configuration macro definition     */
+#define configCPU_CLOCK_HZ                      16000000
+/* TODO: add tick rate configuration macro definition               */
+#define configTICK_RATE_HZ                      250
+/* TODO: add minimal stack size configuration macro definition      */
+#define configMINIMAL_STACK_SIZE                256
+/* TODO: add total heap size configuration macro definition         */
+#define configTOTAL_HEAP_SIZE                   10240
 
 /* Memory allocation related definitions. */
 #define configSUPPORT_STATIC_ALLOCATION         0
@@ -60,8 +64,8 @@ to exclude the API function. */
     #define configPRIO_BITS         4
 #endif
 
-#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY   15
-#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY 5
+#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY         15
+#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY    5
 
 #define configKERNEL_INTERRUPT_PRIORITY         ( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!

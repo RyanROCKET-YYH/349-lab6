@@ -42,7 +42,7 @@ int main( void ) {
     
     timer_start_pwm(3, 1, 100, 16, 2);
     // timer_set_duty_cycle(3,1, 16);
-   
+    gpio_init(GPIO_C, 13, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
     for (;;) {}
     return 0;
 }

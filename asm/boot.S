@@ -69,7 +69,7 @@ ivt:
 .word   spin                /* 53 IRQ37 USART1 */
 .word   uart_irq_handler    /* 54 IRQ38 USART2 */
 .word   spin                /* 55 IRQ39 USART3   */
-.word   spin                /* 56 IRQ40 EXTI15_10   */
+.word   EXTI13_IRQHandler   /* 56 IRQ40 EXTI15_10   */
 .word   spin                /* 57 IRQ41 RTCAlarm */
 .word   spin                /* 58 IRQ42 OTG_FS_WKUP */
 .word   spin                /* 59 IRQ43 RESERVED   */

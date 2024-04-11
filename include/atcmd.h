@@ -6,6 +6,8 @@
 #define ATCMD_ESCAPE_STR      "+++"
 #define ATCMD_ESCAPE_STRLEN   (3)
 
+extern int isInCommandMode;
+
 typedef uint8_t (*atcmd_fn_t)(void *args, const char *cmdargs);
 
 typedef struct {

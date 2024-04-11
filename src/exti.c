@@ -133,12 +133,13 @@ void EXTI13_IRQHandler(void) {
     if (exti->pr & EXTI_PR13) { 
 
         if (exti_led) {
-            gpio_clr(GPIO_A, 4);
+            gpio_clr(GPIO_A, 3);
         } else {
-            gpio_set(GPIO_A, 4);
+            gpio_set(GPIO_A, 3);
         }
 
     exti_led = !exti_led;
     exti_clear_pending_bit(13);
+    nvic_clear_pending(EXTI15_10_INT_NUM);
     }
 }

@@ -114,7 +114,7 @@ void enable_exti(UNUSED gpio_port port, UNUSED uint32_t channel, UNUSED uint32_t
     } else {
         exti->ftsr &= ~(1 << channel);
     }
-    exti->imr |= (1 << channel);
+    exti->imr &= ~(1 << channel);
 }
 
 void disable_exti(UNUSED uint32_t channel) {
@@ -133,9 +133,9 @@ void EXTI13_IRQHandler(void) {
     if (exti->pr & EXTI_PR13) { 
 
         if (exti_led) {
-            gpio_clr(GPIO_A, 3);
+            gpio_clr(GPIO_A, 0);
         } else {
-            gpio_set(GPIO_A, 3);
+            gpio_set(GPIO_A, 0);
         }
 
     exti_led = !exti_led;

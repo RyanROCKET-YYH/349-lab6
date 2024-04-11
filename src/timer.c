@@ -83,6 +83,24 @@ void timer_init(UNUSED int timer, UNUSED uint32_t prescalar, UNUSED uint32_t per
 void timer_start_pwm(UNUSED int timer, UNUSED uint32_t UNUSED channel, UNUSED uint32_t prescalar, UNUSED uint32_t period, UNUSED uint32_t duty_cycle) {
   if (timer < 2 || timer > 5) return; // Check for valid timer
   struct tim2_5* tim = timer_base[timer];
+  struct rcc_reg_map *rcc = RCC_BASE;
+  switch (timer)
+  {
+  case 2:
+    rcc->apb1_enr |= TIM2_CLKEN;
+    break;
+  case 3:
+    rcc->apb1_enr |= TIM3_CLKEN;
+    break;
+  case 4:
+    rcc->apb1_enr |= TIM4_CLKEN;
+    break;
+  case 5:
+    rcc->apb1_enr |= TIM5_CLKEN;
+    break;
+  default:
+    break;
+  }
   switch (channel){
   case 1:
     tim->ccmr[0] &= ~(0b111 << 4);
@@ -120,7 +138,6 @@ void timer_start_pwm(UNUSED int timer, UNUSED uint32_t UNUSED channel, UNUSED ui
   tim->arr = period - 1;
   tim->ccr[channel - 1] = duty_cycle;
 
-  tim->dier |= 1; // Update interrupt enable
   tim->cr1 |= 1; // Enable the timer
 }
 

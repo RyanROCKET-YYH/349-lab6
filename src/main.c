@@ -209,7 +209,6 @@ void vExtiTask(void* pvParameters) {
 void vHardPWM(void* pvParameters) {
     (void)pvParameters;
     gpio_init(GPIO_B, 4, MODE_ALT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
-    timer_init(3, 100, 16);
     timer_start_pwm(3, 1, 100, 16, g_dutycycle);
     for (;;) {
         timer_set_duty_cycle(3, 1, g_dutycycle);
@@ -222,11 +221,6 @@ int main( void ) {
     keypad_init();
     i2c_master_init(80);
     atcmd_parser_init(&parser, commands, (sizeof(commands) / sizeof(commands[0])));
-    // timer_init(3, 100, 16);
-    // gpio_init(GPIO_B, 4, MODE_ALT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
-    
-    // timer_start_pwm(3, 1, 100, 16, 2);
-    // timer_set_duty_cycle(3,1, 16);
     
     xTaskCreate(
         vBlinkyTask,

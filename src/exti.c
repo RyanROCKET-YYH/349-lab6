@@ -21,15 +21,15 @@
 #define EXTI_BASE   (struct exti_reg_map *)   (0x40013C00) 
 #define EXTI_PR13   (1 << 13)
 
-#define EXTI0_INT_NUM (22)
-#define EXTI1_INT_NUM (23)
-#define EXTI2_INT_NUM (24)
-#define EXTI3_INT_NUM (25)
-#define EXTI4_INT_NUM (26)
-#define EXTI9_5_INT_NUM (39)
-#define EXTI15_10_INT_NUM (56)
+#define EXTI0_INT_NUM (6)
+#define EXTI1_INT_NUM (7)
+#define EXTI2_INT_NUM (8)
+#define EXTI3_INT_NUM (9)
+#define EXTI4_INT_NUM (10)
+#define EXTI9_5_INT_NUM (23)
+#define EXTI15_10_INT_NUM (40)
 
-volatile uint8_t exti_led = 0;
+uint8_t exti_led = 0;
 
 /** @brief syscfg */
 struct syscfg_reg_map {
@@ -47,12 +47,6 @@ struct exti_reg_map {
     volatile uint32_t ftsr; /**< 0C falling trigger selection register */
     volatile uint32_t swier; /**< 10 software interrupt event register */
     volatile uint32_t pr; /**< 14 pending register */
-};
-
-enum EXTI_Edge{
-    RISING,
-    FALLING,
-    RISING_FALLING
 };
 
 void enable_exti(UNUSED gpio_port port, UNUSED uint32_t channel, UNUSED uint32_t edge) {
@@ -103,18 +97,18 @@ void enable_exti(UNUSED gpio_port port, UNUSED uint32_t channel, UNUSED uint32_t
 
     struct exti_reg_map* exti = EXTI_BASE;
 
-    if (edge == RISING || edge == RISING_FALLING) {
+    if (edge == RISING_EDGE || edge == RISING_FALLING_EDGE) {
         exti->rtsr |= (1 << channel);
     } else {
         exti->rtsr &= ~(1 << channel);
     }
     
-    if (edge == FALLING || edge == RISING_FALLING) {
+    if (edge == FALLING_EDGE || edge == RISING_FALLING_EDGE) {
         exti->ftsr |= (1 << channel); 
     } else {
         exti->ftsr &= ~(1 << channel);
     }
-    exti->imr &= ~(1 << channel);
+    exti->imr |= ~(1 << channel);
 }
 
 void disable_exti(UNUSED uint32_t channel) {
@@ -138,8 +132,8 @@ void EXTI13_IRQHandler(void) {
             gpio_set(GPIO_A, 0);
         }
 
-    exti_led = !exti_led;
-    exti_clear_pending_bit(13);
-    nvic_clear_pending(EXTI15_10_INT_NUM);
+        exti_led = !exti_led;
+        exti_clear_pending_bit(13);
+        nvic_clear_pending(EXTI15_10_INT_NUM);
     }
 }

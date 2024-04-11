@@ -152,8 +152,7 @@ void vBlinkyTask(void *pvParameters) {
 static void vUARTEchoTask(void *pvParameters) {
     (void)pvParameters;
     char buffer[100];
-    // char testCmd2[] = "AT+RESUME";
-
+    
     for (;;) {
         // only work when command mode
         if (isInCommandMode){
@@ -180,11 +179,28 @@ static void vUARTEchoTask(void *pvParameters) {
     }
 }
 
+void escapeSequenceTask(void *pvParameters) {
+    (void)pvParameters;
+    char byte;
+    while (1) {
+        if (!isInCommandMode) {
+            if (uart_get_byte(&byte) == 0) { 
+                // Directly pass each byte to atcmd_detect_escape
+                if (atcmd_detect_escape(NULL, byte)) {
+                    isInCommandMode = 1;
+                    printf("Entering Command Mode.\n");
+                }
+            }
+        }
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
+}
+
 void vExtiTask(void* pvParameters) {
     (void)pvParameters;
     gpio_init(GPIO_C, 13, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
     gpio_init(GPIO_A, 0, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
-    enable_exti(GPIO_C, 13, RISING_EDGE);
+    enable_exti(GPIO_C, 13, RISING_FALLING_EDGE);
     while (1) {
         vTaskDelay(pdMS_TO_TICKS(500));
     }
@@ -236,6 +252,14 @@ int main( void ) {
         NULL,
         tskIDLE_PRIORITY + 1,
         NULL); 
+    
+    xTaskCreate(
+        escapeSequenceTask, 
+        "ENTERCommand", 
+        configMINIMAL_STACK_SIZE, 
+        NULL, 
+        tskIDLE_PRIORITY + 1, 
+        NULL);
     
     xTaskCreate(
         vHardPWM,

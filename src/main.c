@@ -202,6 +202,14 @@ void vExtiTask(void* pvParameters) {
     gpio_init(GPIO_A, 0, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
     enable_exti(GPIO_C, 13, RISING_FALLING_EDGE);
     while (1) {
+        if (exti_flag) {
+            exti_flag = 0;
+            if (gpio_read(GPIO_A, 0)) {
+                gpio_clr(GPIO_A, 0);
+            } else {
+                gpio_set(GPIO_A, 0);
+            }
+        }
         vTaskDelay(pdMS_TO_TICKS(500));
     }
 }
@@ -214,6 +222,80 @@ void vHardPWM(void* pvParameters) {
         timer_set_duty_cycle(3, 1, g_dutycycle);
         vTaskDelay(pdMS_TO_TICKS(500));
     }
+}
+
+typedef struct {
+    float P;
+    float I;
+    float D;
+} PIDParameters;
+
+volatile PIDParameters pidParams = {0.0f, 0.0f, 0.0f};
+
+void lcd_clear_quick() {
+    lcd_set_cursor(0,0);
+    lcd_print("                ");
+    lcd_set_cursor(1,0);
+    lcd_print("                ");
+    lcd_set_cursor(0,0);
+}
+
+void vPIDTask(void* pvParameters) {
+    (void)pvParameters;
+    char* pids[] = {"P", "I", "D"};
+    float* pid_val[] = {(float*)&pidParams.P, (float*)&pidParams.I, (float*)&pidParams.D};
+    char input[16];
+    int index = 0;
+
+    lcd_driver_init();
+    for (;;) {
+        for (int i = 0; i < 3; i++) {
+            index = 0;
+            memset(input, 0, sizeof(input));
+            lcd_clear_quick();
+            lcd_print("Enter ");
+            lcd_print(pids[i]);
+            lcd_print(":");
+            lcd_set_cursor(1,0);
+            
+            char key = '\0';
+            while (key != '#') {
+                key = keypad_read();
+                if (key != '\0') {
+                    if (((key >= '0' && key <= '9') || key == '*' || key == '#') && index < 15) {
+                        if (key == '*') {
+                            input[index++] = '.';
+                            lcd_print("."); 
+                        } else if (key >= '0' && key <= '9') {
+                            input[index++] = key;
+                            char toPrint[2] = {key, '\0'};
+                            lcd_print(toPrint);
+                        }
+                    }
+                    if (key == '#') {
+                        break; // Exit the loop to process the input
+                    }
+                    key = '\0'; // Reset key to avoid infinite loop
+                    vTaskDelay(pdMS_TO_TICKS(50)); // Debounce delay
+                }
+            }
+
+            if (index > 0) {
+                *pid_val[i] = atof(input);
+            }
+        }
+
+        lcd_clear_quick();
+        char summary1[32];
+        char summary2[32];
+        snprintf(summary1, sizeof(summary1), "PID: P-%.2f", pidParams.P);
+        snprintf(summary2, sizeof(summary2), "I-%.2f  D-%.2f", pidParams.I, pidParams.D);
+        lcd_print(summary1);
+        lcd_set_cursor(1,0);
+        lcd_print(summary2);
+        vTaskDelay(pdMS_TO_TICKS(5000));
+    }
+
 }
 
 int main( void ) {
@@ -246,6 +328,14 @@ int main( void ) {
         NULL,
         tskIDLE_PRIORITY + 1,
         NULL); 
+        
+    xTaskCreate(
+        vPIDTask,
+        "PIDTask",
+        configMINIMAL_STACK_SIZE,
+        NULL,
+        tskIDLE_PRIORITY + 1,
+        NULL);
     
     xTaskCreate(
         escapeSequenceTask, 

@@ -8,6 +8,8 @@
 #define FALLING_EDGE 2
 #define RISING_FALLING_EDGE 3
 
+extern volatile uint8_t exti_flag;
+
 /**
  * @brief Enable an external interrupt
  *

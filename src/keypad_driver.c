@@ -3,6 +3,14 @@
 #include <gpio.h>
 #include <keypad_driver.h>
 #include <unistd.h>
+
+#define YUHONG
+#ifdef YUHONG
+#include "gpio_pins_yuhong.h"
+#elif defined YIYING
+#include "gpio_pins_yiying.h"
+#endif
+
 // #include <systick.h>
 
 // the variables of keypad(columns and rows)

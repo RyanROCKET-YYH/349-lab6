@@ -12,7 +12,7 @@
 #include <gpio.h>
 #include <rcc.h>
 #include <nvic.h>
-
+#include <stdio.h>
 #include <arm.h>
 
 #define UNUSED __attribute__((unused))
@@ -55,7 +55,6 @@ void enable_exti(UNUSED gpio_port port, UNUSED uint32_t channel, UNUSED uint32_t
     // syscfg enable rcc
     struct rcc_reg_map* rcc = RCC_BASE;
     rcc->apb2_enr |= RCC_SYSCFGEN;
-    // nvic_irq(40, IRQ_ENABLE);
 
     struct syscfg_reg_map* syscfg = SYSCFG_BASE;
     syscfg->exticr[3] &= ~(0xF << 4);
@@ -96,6 +95,7 @@ void enable_exti(UNUSED gpio_port port, UNUSED uint32_t channel, UNUSED uint32_t
         default:
             break;
     }
+    printf("channel= %d, exticr_x= %d, exti_x=%d\n", (int)channel, (int)exticr_x, (int)exti_x);
 
     syscfg->exticr[exticr_x] &= ~(0xF << exti_x);
     syscfg->exticr[exticr_x] |= (port << exti_x);
@@ -113,12 +113,12 @@ void enable_exti(UNUSED gpio_port port, UNUSED uint32_t channel, UNUSED uint32_t
     } else {
         exti->ftsr &= ~(1 << channel);
     }
-    exti->imr |= ~(1 << channel);
+    exti->imr |= (1 << channel); // mask 1
 }
 
 void disable_exti(UNUSED uint32_t channel) {
-   struct exti_reg_map* exti = EXTI_BASE;
-   exti->imr &= ~(1 << channel);
+    struct exti_reg_map* exti = EXTI_BASE;
+    exti->imr &= ~(1 << channel);
 }
 
 void exti_clear_pending_bit(UNUSED uint32_t channel) {
@@ -129,7 +129,6 @@ void exti_clear_pending_bit(UNUSED uint32_t channel) {
 
 void EXTI13_IRQHandler(void) {
     struct exti_reg_map* exti = EXTI_BASE;
-    breakpoint();
     if (exti->pr & EXTI_PR13) { 
         exti_flag = 1;
         exti_clear_pending_bit(13);

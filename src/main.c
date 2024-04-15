@@ -198,12 +198,15 @@ void escapeSequenceTask(void *pvParameters) {
 
 void vExtiTask(void* pvParameters) {
     (void)pvParameters;
+    // button
     gpio_init(GPIO_C, 13, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
+    // LED
     gpio_init(GPIO_A, 0, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
     enable_exti(GPIO_C, 13, RISING_FALLING_EDGE);
     while (1) {
         if (exti_flag) {
             exti_flag = 0;
+            // LED
             if (gpio_read(GPIO_A, 0)) {
                 gpio_clr(GPIO_A, 0);
             } else {

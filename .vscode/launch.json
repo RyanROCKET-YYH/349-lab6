@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src",
+      "program": "/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/build/Debug/outDebug"
+    }
+  ]
+}

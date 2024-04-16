@@ -6,29 +6,29 @@
 
 #define YUHONG
 #ifdef YUHONG
-#include "gpio_pins_yuhong.h"
+#include "gpio_pin_yuhong.h"
 #elif defined YIYING
-#include "gpio_pins_yiying.h"
+#include "gpio_pin_yiying.h"
 #endif
 
 // #include <systick.h>
 
 // the variables of keypad(columns and rows)
-#define COL1_PORT  0
-#define COL1_PIN   7
-#define COL2_PORT  2
-#define COL2_PIN   0
-#define COL3_PORT  2
-#define COL3_PIN   7
+// #define COL1_PORT  0
+// #define COL1_PIN   7
+// #define COL2_PORT  2
+// #define COL2_PIN   0
+// #define COL3_PORT  2
+// #define COL3_PIN   7
 
-#define ROW1_PORT  0
-#define ROW1_PIN   6
-#define ROW2_PORT  0
-#define ROW2_PIN   8
-#define ROW3_PORT  0
-#define ROW3_PIN   9
-#define ROW4_PORT  1
-#define ROW4_PIN   6
+// #define ROW1_PORT  0
+// #define ROW1_PIN   6
+// #define ROW2_PORT  0
+// #define ROW2_PIN   8
+// #define ROW3_PORT  0
+// #define ROW3_PIN   9
+// #define ROW4_PORT  1
+// #define ROW4_PIN   6
 
 #define NUM_ROWS   4
 #define NUM_COLS   3
@@ -37,7 +37,7 @@
 const int row_pins[NUM_ROWS] = {ROW1_PIN, ROW2_PIN, ROW3_PIN, ROW4_PIN};
 const int col_pins[NUM_COLS] = {COL1_PIN, COL2_PIN, COL3_PIN};
 const int row_ports[NUM_ROWS] = {ROW1_PORT, ROW2_PORT, ROW3_PORT, ROW4_PORT};
-const int col_ports[NUM_COLS] = {GPIO_A, GPIO_C, GPIO_C};
+const int col_ports[NUM_COLS] = {GPIO_A, GPIO_A, GPIO_C};
 
 const char key_map[NUM_ROWS][NUM_COLS] = {
     {'1', '2', '3'},
@@ -55,19 +55,19 @@ const char key_map[NUM_ROWS][NUM_COLS] = {
 void keypad_init(){
 
     // columns as output
-    gpio_init(GPIO_A, 7, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);		//pa_7
-    gpio_init(GPIO_C, 0, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);		//pc_0
-    gpio_init(GPIO_C, 7, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);		//pc_7
+    gpio_init(COL1_PORT, COL1_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);		//pa_7
+    gpio_init(COL2_PORT, COL2_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);		//pc_0
+    gpio_init(COL3_PORT, COL3_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);		//pc_7
 
     //rows as input 
-    gpio_init(GPIO_A, 6, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);		//pa_6
-    gpio_init(GPIO_A, 8, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);		//pa_8
-    gpio_init(GPIO_A, 9, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);		//pa_9
-    gpio_init(GPIO_B, 6, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);		//pb_6
+    gpio_init(ROW1_PORT, ROW1_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);		//pa_8
+    gpio_init(ROW2_PORT, ROW2_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);		//pa_6
+    gpio_init(ROW3_PORT, ROW3_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);		//pa_9
+    gpio_init(ROW4_PORT, ROW4_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);		//pb_6
     
-    gpio_set(GPIO_A, COL1_PIN);
-    gpio_set(GPIO_A, COL2_PIN);
-    gpio_set(GPIO_C, COL3_PIN);
+    gpio_set(COL1_PORT, COL1_PIN);
+    gpio_set(COL2_PORT, COL2_PIN);
+    gpio_set(COL3_PORT, COL3_PIN);
     return;
 }
 

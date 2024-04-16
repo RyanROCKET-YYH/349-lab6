@@ -21,7 +21,9 @@
 
 #define SYSCFG_BASE (struct syscfg_reg_map *) 0x40013800 
 #define EXTI_BASE   (struct exti_reg_map *)   0x40013C00 
-#define EXTI_PR13   (1 << 13)
+#define EXTI_PR7    (1 << 7)
+#define EXTI_PR8    (1 << 8)
+#define EXTI_PR9    (1 << 9)
 
 #define EXTI0_INT_NUM (6)
 #define EXTI1_INT_NUM (7)
@@ -57,8 +59,7 @@ void enable_exti(UNUSED gpio_port port, UNUSED uint32_t channel, UNUSED uint32_t
     rcc->apb2_enr |= RCC_SYSCFGEN;
 
     struct syscfg_reg_map* syscfg = SYSCFG_BASE;
-    syscfg->exticr[3] &= ~(0xF << 4);
-    syscfg->exticr[3] |= (0b0010 << 4);
+
     uint32_t exticr_x = (channel / 4);
     uint32_t exti_x = (channel % 4) * 4;
     switch (channel) {
@@ -95,7 +96,7 @@ void enable_exti(UNUSED gpio_port port, UNUSED uint32_t channel, UNUSED uint32_t
         default:
             break;
     }
-    printf("channel= %d, exticr_x= %d, exti_x=%d\n", (int)channel, (int)exticr_x, (int)exti_x);
+    // printf("channel= %d, exticr_x= %d, exti_x=%d\n", (int)channel, (int)exticr_x, (int)exti_x);
 
     syscfg->exticr[exticr_x] &= ~(0xF << exti_x);
     syscfg->exticr[exticr_x] |= (port << exti_x);
@@ -127,11 +128,20 @@ void exti_clear_pending_bit(UNUSED uint32_t channel) {
     exti->pr = (1 << channel);
 }
 
-void EXTI13_IRQHandler(void) {
+void EXTI9_5_IRQHandler(void) {
     struct exti_reg_map* exti = EXTI_BASE;
-    if (exti->pr & EXTI_PR13) { 
+    if (exti->pr & EXTI_PR7) { 
         exti_flag = 1;
-        exti_clear_pending_bit(13);
-        nvic_clear_pending(EXTI15_10_INT_NUM);
+        exti_clear_pending_bit(7);
     }
+
+    if (exti->pr & EXTI_PR8) {
+        exti_clear_pending_bit(8);
+    }
+
+    if (exti->pr & EXTI_PR9) {
+        exti_clear_pending_bit(9);
+    }
+
+    nvic_clear_pending(EXTI9_5_INT_NUM);
 }

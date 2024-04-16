@@ -28,6 +28,14 @@
 #include <exti.h>
 #include <atcmd.h>
 
+#define YUHONG
+#ifdef YUHONG
+#include "gpio_pin_yuhong.h"
+#elif defined YIYING
+#include "gpio_pin_yiying.h"
+#endif
+
+
 /** @brief define parser */
 atcmd_parser_t parser;
 /** @brief define passcode */
@@ -132,18 +140,19 @@ const atcmd_t commands[] = {
 void vBlinkyTask(void *pvParameters) {
     (void)pvParameters;
    
-    gpio_init(GPIO_A, 5, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
+    gpio_init(LEDG_PORT, LEDG_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
 
     for(;;) {
-        if (gpio_read(GPIO_A, 5)) {
-            gpio_clr(GPIO_A, 5);
+        if (gpio_read(LEDG_PORT, LEDG_PIN)) {
+            gpio_clr(LEDG_PORT, LEDG_PIN);
         } else {
-            gpio_set(GPIO_A, 5);
+            gpio_set(LEDG_PORT, LEDG_PIN);
         }
         // wait for 1000 millisec
         vTaskDelay(pdMS_TO_TICKS(500));
     }
 }
+
 
 /**
  * @brief  handle the UART echo task
@@ -199,18 +208,18 @@ void escapeSequenceTask(void *pvParameters) {
 void vExtiTask(void* pvParameters) {
     (void)pvParameters;
     // button
-    gpio_init(GPIO_C, 13, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
+    gpio_init(BUTTON1_PORT, BUTTON1_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
     // LED
-    gpio_init(GPIO_A, 0, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
-    enable_exti(GPIO_C, 13, RISING_FALLING_EDGE);
+    gpio_init(GPIO_JP_PORT, GPIO_JP_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
+    enable_exti(BUTTON1_PORT, BUTTON1_PIN, FALLING_EDGE);
     while (1) {
         if (exti_flag) {
             exti_flag = 0;
             // LED
-            if (gpio_read(GPIO_A, 0)) {
-                gpio_clr(GPIO_A, 0);
+            if (gpio_read(GPIO_JP_PORT, GPIO_JP_PIN)) {
+                gpio_clr(GPIO_JP_PORT, GPIO_JP_PIN);
             } else {
-                gpio_set(GPIO_A, 0);
+                gpio_set(GPIO_JP_PORT, GPIO_JP_PIN);
             }
         }
         vTaskDelay(pdMS_TO_TICKS(500));
@@ -348,13 +357,13 @@ int main( void ) {
         tskIDLE_PRIORITY + 1, 
         NULL);
     
-    xTaskCreate(
-        vHardPWM,
-        "HardPWM",
-        configMINIMAL_STACK_SIZE,
-        NULL,
-        tskIDLE_PRIORITY + 1,
-        NULL); 
+    // xTaskCreate(
+    //     vHardPWM,
+    //     "HardPWM",
+    //     configMINIMAL_STACK_SIZE,
+    //     NULL,
+    //     tskIDLE_PRIORITY + 1,
+    //     NULL); 
 
     vTaskStartScheduler();
     

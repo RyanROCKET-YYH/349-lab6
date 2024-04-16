@@ -52,7 +52,7 @@ ivt:
 .word   spin                /* 36 IRQ20 CAN1_TX0   */
 .word   spin                /* 37 IRQ21 CAN1_RX1 */
 .word   spin                /* 38 IRQ22 CAN1_SCE */
-.word   spin                /* 39 IRQ23 EXTI9_5   */
+.word   EXTI9_5_IRQHandler  /* 39 IRQ23 EXTI9_5   */
 .word   spin                /* 40 IRQ24 TIM1_BRK   */
 .word   spin                /* 41 IRQ25 TIM1_UP */
 .word   spin                /* 42 IRQ26 TIM1_TRG_COM */
@@ -69,7 +69,7 @@ ivt:
 .word   spin                /* 53 IRQ37 USART1 */
 .word   uart_irq_handler    /* 54 IRQ38 USART2 */
 .word   spin                /* 55 IRQ39 USART3   */
-.word   EXTI13_IRQHandler   /* 56 IRQ40 EXTI15_10   */
+.word   spin                /* 56 IRQ40 EXTI15_10   */
 .word   spin                /* 57 IRQ41 RTCAlarm */
 .word   spin                /* 58 IRQ42 OTG_FS_WKUP */
 .word   spin                /* 59 IRQ43 RESERVED   */

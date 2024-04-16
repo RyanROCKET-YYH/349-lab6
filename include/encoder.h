@@ -27,7 +27,7 @@ void encoder_irq_handler();
 /*
  * Returns the current position of the encoder
  */
-uint8_t encoder_read();
+uint32_t encoder_read();
 
 /**
 * @brief Register a callback function for the encoder ISR

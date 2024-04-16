@@ -13,6 +13,7 @@
 #include <rcc.h>
 #include <nvic.h>
 #include <stdio.h>
+#include <encoder.h>
 #include <arm.h>
 
 #define UNUSED __attribute__((unused))
@@ -135,11 +136,10 @@ void EXTI9_5_IRQHandler(void) {
         exti_clear_pending_bit(7);
     }
 
-    if (exti->pr & EXTI_PR8) {
+    if (exti->pr & (EXTI_PR8 | EXTI_PR9)) {
+        encoder_irq_handler();
+        
         exti_clear_pending_bit(8);
-    }
-
-    if (exti->pr & EXTI_PR9) {
         exti_clear_pending_bit(9);
     }
 

@@ -27,6 +27,7 @@
 #include <timer.h>
 #include <exti.h>
 #include <atcmd.h>
+#include <encoder.h>
 
 #define YUHONG
 #ifdef YUHONG
@@ -224,6 +225,11 @@ void vExtiTask(void* pvParameters) {
         }
         vTaskDelay(pdMS_TO_TICKS(500));
     }
+}
+
+void vEncoderMonitorTask(void* pvParameters) {
+    (void)pvParameters;
+    encoder_init();
 }
 
 void vHardPWM(void* pvParameters) {

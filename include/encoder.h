@@ -6,6 +6,9 @@
 
 #define TICKS_PER_REV 1200
 #define MAX_POS 255
+
+extern volatile uint32_t enc_pos;
+extern volatile uint32_t last_state;
 /*
  * Initialize the encoder
  * This only supports one encoder at a time

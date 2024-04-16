@@ -1,11 +1,11 @@
 /**
  * @file main.c
  *
- * @brief
+ * @brief main function and some helper functions of lab 6
  *
- * @date
+ * @date 04/16/2024
  *
- * @author
+ * @author Yuhong Yao (yuhongy), Yiying Li (yiyingl4)
  */
 
 #include <FreeRTOS.h>
@@ -100,6 +100,10 @@ uint8_t handlePasscodeChange(void *args, const char *cmdArgs) {
     return 0; // Fail
 }
 
+/**
+ * @brief  handle the duty cycle change
+ *
+*/
 uint8_t handleDutyCycleChange(void* args, const char* cmdArgs) {
     (void)args;
 
@@ -189,6 +193,10 @@ static void vUARTEchoTask(void *pvParameters) {
     }
 }
 
+/**
+ * @brief  handle +++ command: enter the command mode
+ *
+*/
 void escapeSequenceTask(void *pvParameters) {
     (void)pvParameters;
     char byte;
@@ -206,17 +214,23 @@ void escapeSequenceTask(void *pvParameters) {
     }
 }
 
+/**
+ * @brief  handle external interrupt task
+ *
+*/
 void vExtiTask(void* pvParameters) {
     (void)pvParameters;
     // button
     gpio_init(BUTTON1_PORT, BUTTON1_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
     // LED
     gpio_init(GPIO_JP_PORT, GPIO_JP_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
+    // button enable exti
     enable_exti(BUTTON1_PORT, BUTTON1_PIN, FALLING_EDGE);
     while (1) {
+        // the exti_flag is from exti
         if (exti_flag) {
             exti_flag = 0;
-            // LED
+            // toggle LED
             if (gpio_read(GPIO_JP_PORT, GPIO_JP_PIN)) {
                 gpio_clr(GPIO_JP_PORT, GPIO_JP_PIN);
             } else {
@@ -227,11 +241,19 @@ void vExtiTask(void* pvParameters) {
     }
 }
 
+/**
+ * @brief  handle encoder task
+ *
+*/
 void vEncoderMonitorTask(void* pvParameters) {
     (void)pvParameters;
     encoder_init();
 }
 
+/**
+ * @brief  handle Hardware-driven PWM task
+ *
+*/
 void vHardPWM(void* pvParameters) {
     (void)pvParameters;
     gpio_init(GPIO_B, 4, MODE_ALT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
@@ -242,14 +264,17 @@ void vHardPWM(void* pvParameters) {
     }
 }
 
+/** @brief PID parameters */
 typedef struct {
     float P;
     float I;
     float D;
 } PIDParameters;
 
+/** @brief init PID parameters */
 volatile PIDParameters pidParams = {0.0f, 0.0f, 0.0f};
 
+/** @brief clear the lcd */
 void lcd_clear_quick() {
     lcd_set_cursor(0,0);
     lcd_print("                ");
@@ -258,6 +283,10 @@ void lcd_clear_quick() {
     lcd_set_cursor(0,0);
 }
 
+/**
+ * @brief PID controller task
+ *
+*/
 void vPIDTask(void* pvParameters) {
     (void)pvParameters;
     char* pids[] = {"P", "I", "D"};
@@ -316,6 +345,10 @@ void vPIDTask(void* pvParameters) {
 
 }
 
+/**
+ * @brief main funtion
+ *
+*/
 int main( void ) {
     uart_init(115200);
     keypad_init();

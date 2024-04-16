@@ -1,12 +1,11 @@
-
 /**
- * @file
+ * @file timer.c
  *
- * @brief
+ * @brief timer related functions of lab 6
  *
- * @date
+ * @date 04/09/2024
  *
- * @author
+ * @author Yuhong Yao (yuhongy), Yiying Li (yiyingl4)
  */
 
 #include <unistd.h>

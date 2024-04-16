@@ -1,0 +1,46 @@
+warning: Specified markdown mainpage 'README.docx' does not exist
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/adc.c:73: warning: Member adc_mutex (variable) of file adc.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/encoder.c:21: warning: Member YUHONG (macro definition) of file encoder.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/encoder.c:28: warning: Member ENCODER_TPR (macro definition) of file encoder.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:19: warning: Member UNUSED (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:21: warning: Member RCC_SYSCFGEN (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:23: warning: Member SYSCFG_BASE (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:24: warning: Member EXTI_BASE (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:25: warning: Member EXTI_PR7 (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:26: warning: Member EXTI_PR8 (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:27: warning: Member EXTI_PR9 (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:29: warning: Member EXTI0_INT_NUM (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:30: warning: Member EXTI1_INT_NUM (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:31: warning: Member EXTI2_INT_NUM (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:32: warning: Member EXTI3_INT_NUM (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:33: warning: Member EXTI4_INT_NUM (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:34: warning: Member EXTI9_5_INT_NUM (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:35: warning: Member EXTI15_10_INT_NUM (macro definition) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:57: warning: Member enable_exti(UNUSED gpio_port port, UNUSED uint32_t channel, UNUSED uint32_t edge) (function) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:121: warning: Member disable_exti(UNUSED uint32_t channel) (function) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:126: warning: Member exti_clear_pending_bit(UNUSED uint32_t channel) (function) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:132: warning: Member EXTI9_5_IRQHandler(void) (function) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/exti.c:37: warning: Member exti_flag (variable) of file exti.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/main.c:44: warning: Member g_dutycycle (variable) of file main.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/motor_driver.c:17: warning: Member UNUSED (macro definition) of file motor_driver.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/motor_driver.c:20: warning: Member motor_init(UNUSED gpio_port port_a, UNUSED gpio_port port_b, UNUSED gpio_port port_pwm, UNUSED uint32_t channel_a, UNUSED uint32_t channel_b, UNUSED uint32_t channel_pwm, UNUSED uint32_t timer, UNUSED uint32_t timer_channel, UNUSED uint32_t alt_timer) (function) of file motor_driver.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/motor_driver.c:25: warning: Member motor_set_dir(UNUSED uint32_t duty_cycle, UNUSED uint32_t direction) (function) of file motor_driver.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/motor_driver.c:30: warning: Member motor_position() (function) of file motor_driver.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:18: warning: Member UNUSED (macro definition) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:20: warning: Member PWM_MODE1 (macro definition) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:21: warning: Member TIM_CCMR_OC1PE (macro definition) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:22: warning: Member TIM_CCMR_OC2PE (macro definition) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:23: warning: Member TIM_CCER_CC1E (macro definition) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:24: warning: Member TIM_CCER_CC1P (macro definition) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:25: warning: Member TIM_CCER_CC2E (macro definition) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:26: warning: Member TIM_CCER_CC2P (macro definition) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:27: warning: Member TIM_CCER_CC3E (macro definition) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:28: warning: Member TIM_CCER_CC3P (macro definition) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:29: warning: Member TIM_CCER_CC4E (macro definition) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:30: warning: Member TIM_CCER_CC4P (macro definition) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:83: warning: Member timer_start_pwm(UNUSED int timer, UNUSED uint32_t UNUSED channel, UNUSED uint32_t prescalar, UNUSED uint32_t period, UNUSED uint32_t duty_cycle) (function) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:144: warning: Member timer_set_duty_cycle(UNUSED int timer, UNUSED uint32_t channel, UNUSED uint32_t duty_cycle) (function) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/timer.c:32: warning: Member timer_base[] (variable) of file timer.c is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/main.c:269: warning: Member P (variable) of struct PIDParameters is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/main.c:270: warning: Member I (variable) of struct PIDParameters is not documented.
+/Users/yiyingli/Downloads/18349/lab6/lab-6-motor-control-using-rtos-yuhongy_yiyingl4_/src/main.c:271: warning: Member D (variable) of struct PIDParameters is not documented.

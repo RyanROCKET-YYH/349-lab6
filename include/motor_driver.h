@@ -4,10 +4,18 @@
 #include <unistd.h>
 #include <gpio.h>
 
-#define FREE 0
-#define FORWARD 1
-#define BACKWARD 2
-#define STOP 3
+// #define FREE 0
+// #define FORWARD 1
+// #define BACKWARD 2
+// #define STOP 3
+
+/** @brief encoder's states */
+typedef enum {
+    FREE,
+    FORWARD,
+    BACKWARD,
+    STOP
+} MotorDirection;
 
 /*
  * Motor Driver initialization function
@@ -35,7 +43,7 @@ void motor_init(gpio_port port_a, gpio_port port_b, gpio_port port_pwm, uint32_t
  * @param duty_cycle - Sets the duty_cycle (and thus the speed) of the PWM output. Value must be 0 - 100
  * @param direction  - must be one of FREE, FORWARD, BACKWARD, STOP
  */
-void motor_set_dir(uint32_t duty_cycle, uint32_t direction);
+void motor_set_dir(gpio_port port_a, gpio_port port_b, uint32_t channel_a, uint32_t channel_b, uint32_t timer, uint32_t timer_channel, uint32_t duty_cycle, MotorDirection direction);
 
 
 /*

@@ -14,15 +14,13 @@
 #include <timer.h>
 #include <encoder.h>
 
+
 #define UNUSED __attribute__((unused))
 
-/** @brief encoder's states */
-typedef enum {
-    MOTOR_FREE = 0,
-    MOTOR_FORWARD = 1,
-    MOTOR_BACKWARD = 2,
-    MOTOR_STOP = 3
-} MotorDirection;
+// Forward declaration of encoder_read
+extern uint32_t encoder_read(void);
+
+
 
 void motor_init(UNUSED gpio_port port_a, UNUSED gpio_port port_b, UNUSED gpio_port port_pwm, UNUSED uint32_t channel_a, UNUSED uint32_t channel_b, UNUSED uint32_t channel_pwm, UNUSED uint32_t timer, UNUSED uint32_t timer_channel, UNUSED uint32_t alt_timer) {
     // Initialize GPIO pins 
@@ -48,11 +46,39 @@ void motor_init(UNUSED gpio_port port_a, UNUSED gpio_port port_b, UNUSED gpio_po
 }
 
 
-void motor_set_dir(UNUSED uint32_t duty_cycle, UNUSED uint32_t direction) {
+void motor_set_dir(gpio_port port_a, gpio_port port_b, uint32_t channel_a, uint32_t channel_b, uint32_t timer, uint32_t timer_channel, uint32_t duty_cycle, MotorDirection direction) {
+    switch (direction) {
+        case FORWARD:
+            // Set IN1 = HIGH and IN2 = LOW for forward direction
+            gpio_set(port_a, channel_a);   // MOTOR IN1
+            gpio_clr(port_b, channel_b);    // MOTOR IN2
+            timer_set_duty_cycle(timer, timer_channel, duty_cycle);
+            break;
 
+        case BACKWARD:
+            // Set IN1 = LOW and IN2 = HIGH for backward direction
+            gpio_clr(port_a, channel_a);    // MOTOR IN1
+            gpio_set(port_b, channel_b);   // MOTOR IN2
+            timer_set_duty_cycle(timer, timer_channel, duty_cycle);
+            break;
+
+        case STOP:
+            // Set both IN1 and IN2 HIGH to stop the motor
+            gpio_set(port_a, channel_a);   // MOTOR IN1
+            gpio_set(port_b, channel_b);   // MOTOR IN2
+            // timer_set_duty_cycle(timer, timer_channel, 0);
+            break;
+
+        case FREE:
+            // // Set both IN1 and IN2 LOW
+            // gpio_clr(port_a, channel_a);    // MOTOR IN1
+            // gpio_clr(port_b, channel_b);    // MOTOR IN2
+            timer_set_duty_cycle(timer, timer_channel, 0); // Set PWM to 0%
+            break;
+    }
 }
 
-
 uint8_t motor_position() {
-    return -1;
+    uint32_t motor_pos = encoder_read();
+    return motor_pos;
 }

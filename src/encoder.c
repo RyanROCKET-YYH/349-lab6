@@ -103,9 +103,10 @@ void encoder_irq_handler() {
     // Handle overflow
     if (enc_pos >= ENCODER_TPR) {
         enc_pos = 0; // Reset position after reaching the max
-    } else if (enc_pos < 0) {
+    } 
+    else if (enc_pos < 0) {
         enc_pos = ENCODER_TPR - 1; // Wrap around if the count goes negative
-    }
+    } //TODO: when make flash, error: comparison of unsigned expression in '< 0' is always false [-Werror=type-limits]
 }
 
 /**
@@ -116,5 +117,5 @@ uint32_t encoder_read() {
     taskENTER_CRITICAL();
     uint32_t pos = enc_pos;
     taskEXIT_CRITICAL();
-    return enc_pos;
+    return pos;
 }

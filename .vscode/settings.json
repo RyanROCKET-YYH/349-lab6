@@ -58,6 +58,8 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
     "nvic.h": "c",
-    "gpio_pin_yiying.h": "c"
+    "gpio_pin_yiying.h": "c",
+    "gpio_pin_yuhong.h": "c",
+    "freertos.h": "c"
   }
 }

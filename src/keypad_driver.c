@@ -37,7 +37,7 @@
 const int row_pins[NUM_ROWS] = {ROW1_PIN, ROW2_PIN, ROW3_PIN, ROW4_PIN};
 const int col_pins[NUM_COLS] = {COL1_PIN, COL2_PIN, COL3_PIN};
 const int row_ports[NUM_ROWS] = {ROW1_PORT, ROW2_PORT, ROW3_PORT, ROW4_PORT};
-const int col_ports[NUM_COLS] = {GPIO_A, GPIO_A, GPIO_C};
+const int col_ports[NUM_COLS] = {COL1_PORT, COL2_PORT, COL3_PORT};
 
 const char key_map[NUM_ROWS][NUM_COLS] = {
     {'1', '2', '3'},

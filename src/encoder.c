@@ -25,8 +25,6 @@
 #include "gpio_pin_yiying.h"
 #endif
 
-#define ENCODER_TPR 1200
-
 /** @brief encoder's states */
 typedef enum {S00 = 0x0, S10 = 0x2, S11 = 0x3, S01 = 0x1} encoder_state;
 
@@ -101,11 +99,11 @@ void encoder_irq_handler() {
 
     last_state = enc_state;
     // Handle overflow
-    if (enc_pos >= ENCODER_TPR) {
+    if (enc_pos >= TICKS_PER_REV) {
         enc_pos = 0; // Reset position after reaching the max
     } 
     else if (enc_pos < 0) {
-        enc_pos = ENCODER_TPR - 1; // Wrap around if the count goes negative
+        enc_pos = TICKS_PER_REV - 1; // Wrap around if the count goes negative
     } //TODO: when make flash, error: comparison of unsigned expression in '< 0' is always false [-Werror=type-limits]
 }
 

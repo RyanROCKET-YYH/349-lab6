@@ -22,6 +22,7 @@
 
 #define SYSCFG_BASE (struct syscfg_reg_map *) 0x40013800 
 #define EXTI_BASE   (struct exti_reg_map *)   0x40013C00 
+#define EXTI_PR0    (1)
 #define EXTI_PR7    (1 << 7)
 #define EXTI_PR8    (1 << 8)
 #define EXTI_PR9    (1 << 9)
@@ -144,4 +145,20 @@ void EXTI9_5_IRQHandler(void) {
     }
 
     nvic_clear_pending(EXTI9_5_INT_NUM);
+}
+
+void EXTI0_IRQHandler(void) {
+    struct exti_reg_map* exti = EXTI_BASE;
+    if (exti->pr & EXTI_PR0) { 
+        exti_flag = 1;
+        exti_clear_pending_bit(0);
+    }
+
+    if (exti->pr & (EXTI_PR0)) {
+        encoder_irq_handler();
+        
+        exti_clear_pending_bit(0);
+    }
+
+    nvic_clear_pending(EXTI0_INT_NUM);
 }

@@ -30,7 +30,7 @@
 #include <encoder.h>
 #include <motor_driver.h>
 
-#define YUHONG
+#define YIYING
 #ifdef YUHONG
 #include "gpio_pin_yuhong.h"
 #elif defined YIYING
@@ -221,33 +221,33 @@ void escapeSequenceTask(void *pvParameters) {
 */
 volatile int motorRunning = 0;
 
-void vExtiTask(void* pvParameters) {
-    (void)pvParameters;
-    // button
-    gpio_init(BUTTON1_PORT, BUTTON1_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
-    motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, ALT2);
+// void vExtiTask(void* pvParameters) {
+//     (void)pvParameters;
+//     // button
+//     gpio_init(BUTTON1_PORT, BUTTON1_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
+//     motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, ALT2);
     
-    // // LED
-    // gpio_init(GPIO_JP_PORT, GPIO_JP_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
-    // button enable exti
-    enable_exti(BUTTON1_PORT, BUTTON1_PIN, RISING_FALLING_EDGE);
-    while (1) {
-        // Check if the external interrupt flag is set
-        if (exti_flag) {
-            exti_flag = 0; // Clear the interrupt flag
+//     // // LED
+//     // gpio_init(GPIO_JP_PORT, GPIO_JP_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
+//     // button enable exti
+//     enable_exti(BUTTON1_PORT, BUTTON1_PIN, RISING_FALLING_EDGE);
+//     while (1) {
+//         // Check if the external interrupt flag is set
+//         if (exti_flag) {
+//             exti_flag = 0; // Clear the interrupt flag
 
-            // Toggle motor state
-            motorRunning = !motorRunning;
+//             // Toggle motor state
+//             motorRunning = !motorRunning;
 
-            if (motorRunning) {
-                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 80, FORWARD);
-            } else {
-                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
-            }
-        }
-        vTaskDelay(pdMS_TO_TICKS(100)); // Delay to debounce the button
-    }
-}
+//             if (motorRunning) {
+//                 motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 80, FORWARD);
+//             } else {
+//                 motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
+//             }
+//         }
+//         vTaskDelay(pdMS_TO_TICKS(100)); // Delay to debounce the button
+//     }
+// }
 
 /**
  * @brief  handle encoder task
@@ -258,8 +258,8 @@ void vEncoderMonitorTask(void* pvParameters) {
     encoder_init();
 
     while(1) {
-        uint32_t enc_read = encoder_read();
-        printf("encoder_read = %ld\n", enc_read);
+        // uint32_t enc_read = encoder_read();
+        // printf("encoder_read = %ld\n", enc_read);
         vTaskDelay(pdMS_TO_TICKS(500));
     }
 }
@@ -367,28 +367,33 @@ void vMotorTask(void* pvParameters){
     (void)pvParameters;
     // Initialize the motor
     // motor_init(gpio_port port_a, gpio_port port_b, gpio_port port_pwm, uint32_t channel_a, uint32_t channel_b, uint32_t channel_pwm, uint32_t timer, uint32_t timer_channel, uint32_t alt_timer)
-    motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, 3, 1, ALT2);
-    motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 100, BACKWARD);
-    vTaskDelay(pdMS_TO_TICKS(15000));
+    motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, MOTOR_INIT_ALT);
+    motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 100, BACKWARD);
+    vTaskDelay(pdMS_TO_TICKS(2000));
 
     while (1) {
-        // move forward
+        move forward
+        printf("Motor moving FORWARD\n");
         // void motor_set_dir(gpio_port port_a, gpio_port port_b, uint32_t channel_a, uint32_t channel_b, uint32_t timer, uint32_t timer_channel, uint32_t duty_cycle, MotorDirection direction)
-        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 60, BACKWARD);
-        // vTaskDelay(pdMS_TO_TICKS(10000));
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 60, FORWARD);
+        vTaskDelay(pdMS_TO_TICKS(2000));
 
-        // // // move backward
-        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 30, BACKWARD);
-        // vTaskDelay(pdMS_TO_TICKS(10000));
-        // // printf("Motor moving BACKWARD at 16 duty cycle\n");
+        // // move backward
+        printf("Motor moving BACKWARD\n");
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 30, BACKWARD);
+        vTaskDelay(pdMS_TO_TICKS(2000));
+        
 
-        // // // Stop the motor
-        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 0, STOP);
+        // // Stop the motor
         printf("Motor STOPPED\n");
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
+        vTaskDelay(pdMS_TO_TICKS(2000));
 
         // Free the motor
-        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 0, FREE);
-        // printf("Motor is FREE\n");
+        printf("Motor is FREE\n");
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, FREE);
+        vTaskDelay(pdMS_TO_TICKS(2000));
+        
 
         // // // Print motor position
         // uint32_t pos = motor_position();
@@ -425,13 +430,13 @@ int main( void ) {
         tskIDLE_PRIORITY + 1,
         NULL); 
 
-    xTaskCreate(
-        vExtiTask,
-        "EXTITask",
-        configMINIMAL_STACK_SIZE,
-        NULL,
-        tskIDLE_PRIORITY + 1,
-        NULL); 
+    // xTaskCreate(
+    //     vExtiTask,
+    //     "EXTITask",
+    //     configMINIMAL_STACK_SIZE,
+    //     NULL,
+    //     tskIDLE_PRIORITY + 1,
+    //     NULL); 
         
     xTaskCreate(
         vPIDTask,
@@ -457,21 +462,21 @@ int main( void ) {
     //     tskIDLE_PRIORITY + 1,
     //     NULL); 
 
-    // xTaskCreate(
-    //     vEncoderMonitorTask, 
-    //     "EnocderMonitor", 
-    //     configMINIMAL_STACK_SIZE, 
-    //     NULL, 
-    //     tskIDLE_PRIORITY + 1, 
-    //     NULL);
+    xTaskCreate(
+        vEncoderMonitorTask, 
+        "EnocderMonitor", 
+        configMINIMAL_STACK_SIZE, 
+        NULL, 
+        tskIDLE_PRIORITY + 1, 
+        NULL);
 
-    // xTaskCreate(
-    //     vMotorTask, 
-    //     "Motor", 
-    //     configMINIMAL_STACK_SIZE, 
-    //     NULL, 
-    //     tskIDLE_PRIORITY + 1, 
-    //     NULL);
+    xTaskCreate(
+        vMotorTask, 
+        "Motor", 
+        configMINIMAL_STACK_SIZE, 
+        NULL, 
+        tskIDLE_PRIORITY + 1, 
+        NULL);
 
     vTaskStartScheduler();
     

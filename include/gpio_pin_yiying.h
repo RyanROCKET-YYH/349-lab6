@@ -35,24 +35,33 @@
 #define ROW4_PORT  0 //PA9
 #define ROW4_PIN   9
 
-#define SERVO_PORT       3  // D4
+#define SERVO_PORT       3  // D4 TODO:
 #define SERVO_PIN        5 
 #define GPIO_JP_PORT     0  // Green LED: PA_10(0, 10)
 #define GPIO_JP_PIN      10
-#define MOTOR_EN_PORT    1  // D5
-#define MORTO_EN_PIN     4 
-#define ENC_B_PORT       0  // D7
-#define ENC_B_PIN        8
-#define ENC_A_PORT       0  // D8
-#define ENC_A_PIN        9
+
 #define BUTTON1_PORT     1  // A3(PB0) // BUTTON for exti
 #define BUTTON1_PIN      0
-#define BUTTON2_PORT     1  // //reset???
-#define BUTTON2_PIN      6
-#define MORTO_IN1_PORT   0  // D11
-#define MORTO_IN1_PIN    7
-#define MORTO_IN2_PORT   0  // D12
-#define MORTO_IN2_PIN    6
+#define BUTTON2_PORT     0  // A2(PA_4)
+#define BUTTON2_PIN      4
+
+// encoder
+#define ENC_B_PORT       0  // D12 (PA_6)
+#define ENC_B_PIN        6
+#define ENC_A_PORT       0  // D13 (PA_5)
+#define ENC_A_PIN        5
+
+// motor
+#define MOTOR_EN_PORT    1  // D3 (PB_3)
+#define MOTOR_EN_PIN     3 
+#define MORTO_IN1_PORT   0  // A0(PA_0)
+#define MORTO_IN1_PIN    0
+#define MORTO_IN2_PORT   0  // A1(PA_1)
+#define MORTO_IN2_PIN    1
+#define PWM_TIMER         2
+#define PWM_TIMER_CHANNEL 2
+#define MOTOR_INIT_ALT 1 // ALT1
+
 #define LEDG_PORT        2  // A4(PC_1) //Red LED: (2_1)
 #define LEDG_PIN         1
 

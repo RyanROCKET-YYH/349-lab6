@@ -18,7 +18,7 @@
 #include <nvic.h>
 #include <arm.h>
 
-#define YUHONG
+#define YIYING
 #ifdef YUHONG
 #include "gpio_pin_yuhong.h"
 #elif defined YIYING
@@ -59,6 +59,8 @@ volatile uint32_t last_state = S00;
  * 
 */
 void encoder_irq_handler() {
+
+    
     uint32_t enc_a = gpio_read(ENC_A_PORT, ENC_A_PIN);
     uint32_t enc_b = gpio_read(ENC_B_PORT, ENC_B_PIN);
     encoder_state enc_state = (encoder_state)((enc_a << 1) | (enc_b));

@@ -361,29 +361,32 @@ void vMotorTask(void* pvParameters){
     // Initialize the motor
     // motor_init(gpio_port port_a, gpio_port port_b, gpio_port port_pwm, uint32_t channel_a, uint32_t channel_b, uint32_t channel_pwm, uint32_t timer, uint32_t timer_channel, uint32_t alt_timer)
     motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, 3, 1, ALT2);
+    motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 100, BACKWARD);
+    vTaskDelay(pdMS_TO_TICKS(5000));
 
     while (1) {
         // move forward
         // void motor_set_dir(gpio_port port_a, gpio_port port_b, uint32_t channel_a, uint32_t channel_b, uint32_t timer, uint32_t timer_channel, uint32_t duty_cycle, MotorDirection direction)
-        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 2, 1, 30, FORWARD);
-        vTaskDelay(pdMS_TO_TICKS(100));
+        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 60, BACKWARD);
+        // vTaskDelay(pdMS_TO_TICKS(10000));
 
-        // // move backward
-        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 2, 1, 16, BACKWARD);
-        // printf("Motor moving BACKWARD at 16 duty cycle\n");
+        // // // move backward
+        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 30, BACKWARD);
+        // vTaskDelay(pdMS_TO_TICKS(10000));
+        // // printf("Motor moving BACKWARD at 16 duty cycle\n");
 
-        // // Stop the motor
-        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 2, 1, 0, STOP);
+        // // // Stop the motor
+        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 0, STOP);
         // printf("Motor STOPPED\n");
 
-        // // Free the motor
-        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 2, 1, 0, FREE);
-        // printf("Motor is FREE\n");
+        // // // Free the motor
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 0, FREE);
+        printf("Motor is FREE\n");
 
-        // // Print motor position
+        // // // Print motor position
         // uint32_t pos = motor_position();
         // printf("Current Motor Position: %lu\n", pos);
-        // vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 

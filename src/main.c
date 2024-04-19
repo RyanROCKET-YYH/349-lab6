@@ -30,7 +30,7 @@
 #include <encoder.h>
 #include <motor_driver.h>
 
-#define YIYING
+#define YUHONG
 #ifdef YUHONG
 #include "gpio_pin_yuhong.h"
 #elif defined YIYING
@@ -221,33 +221,33 @@ void escapeSequenceTask(void *pvParameters) {
 */
 volatile int motorRunning = 0;
 
-// void vExtiTask(void* pvParameters) {
-//     (void)pvParameters;
-//     // button
-//     gpio_init(BUTTON1_PORT, BUTTON1_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
-//     motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, ALT2);
+void vExtiTask(void* pvParameters) {
+    (void)pvParameters;
+    // button
+    gpio_init(BUTTON1_PORT, BUTTON1_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
+    motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, ALT2);
     
-//     // // LED
-//     // gpio_init(GPIO_JP_PORT, GPIO_JP_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
-//     // button enable exti
-//     enable_exti(BUTTON1_PORT, BUTTON1_PIN, RISING_FALLING_EDGE);
-//     while (1) {
-//         // Check if the external interrupt flag is set
-//         if (exti_flag) {
-//             exti_flag = 0; // Clear the interrupt flag
+    // // LED
+    // gpio_init(GPIO_JP_PORT, GPIO_JP_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
+    // button enable exti
+    enable_exti(BUTTON1_PORT, BUTTON1_PIN, RISING_FALLING_EDGE);
+    while (1) {
+        // Check if the external interrupt flag is set
+        if (exti_flag) {
+            exti_flag = 0; // Clear the interrupt flag
 
-//             // Toggle motor state
-//             motorRunning = !motorRunning;
+            // Toggle motor state
+            motorRunning = !motorRunning;
 
-//             if (motorRunning) {
-//                 motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 80, FORWARD);
-//             } else {
-//                 motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
-//             }
-//         }
-//         vTaskDelay(pdMS_TO_TICKS(100)); // Delay to debounce the button
-//     }
-// }
+            if (motorRunning) {
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 80, FORWARD);
+            } else {
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
+            }
+        }
+        vTaskDelay(pdMS_TO_TICKS(100)); // Delay to debounce the button
+    }
+}
 
 /**
  * @brief  handle encoder task
@@ -258,8 +258,8 @@ void vEncoderMonitorTask(void* pvParameters) {
     encoder_init();
 
     while(1) {
-        // uint32_t enc_read = encoder_read();
-        // printf("encoder_read = %ld\n", enc_read);
+        uint32_t enc_read = encoder_read();
+        printf("encoder_read = %ld\n", enc_read);
         vTaskDelay(pdMS_TO_TICKS(500));
     }
 }
@@ -430,13 +430,13 @@ int main( void ) {
         tskIDLE_PRIORITY + 1,
         NULL); 
 
-    // xTaskCreate(
-    //     vExtiTask,
-    //     "EXTITask",
-    //     configMINIMAL_STACK_SIZE,
-    //     NULL,
-    //     tskIDLE_PRIORITY + 1,
-    //     NULL); 
+    xTaskCreate(
+        vExtiTask,
+        "EXTITask",
+        configMINIMAL_STACK_SIZE,
+        NULL,
+        tskIDLE_PRIORITY + 1,
+        NULL); 
         
     xTaskCreate(
         vPIDTask,
@@ -462,21 +462,21 @@ int main( void ) {
     //     tskIDLE_PRIORITY + 1,
     //     NULL); 
 
-    xTaskCreate(
-        vEncoderMonitorTask, 
-        "EnocderMonitor", 
-        configMINIMAL_STACK_SIZE, 
-        NULL, 
-        tskIDLE_PRIORITY + 1, 
-        NULL);
+    // xTaskCreate(
+    //     vEncoderMonitorTask, 
+    //     "EnocderMonitor", 
+    //     configMINIMAL_STACK_SIZE, 
+    //     NULL, 
+    //     tskIDLE_PRIORITY + 1, 
+    //     NULL);
 
-    xTaskCreate(
-        vMotorTask, 
-        "Motor", 
-        configMINIMAL_STACK_SIZE, 
-        NULL, 
-        tskIDLE_PRIORITY + 1, 
-        NULL);
+    // xTaskCreate(
+    //     vMotorTask, 
+    //     "Motor", 
+    //     configMINIMAL_STACK_SIZE, 
+    //     NULL, 
+    //     tskIDLE_PRIORITY + 1, 
+    //     NULL);
 
     vTaskStartScheduler();
     

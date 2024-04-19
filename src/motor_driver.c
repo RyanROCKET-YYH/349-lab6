@@ -68,13 +68,13 @@ void motor_set_dir(gpio_port port_a, gpio_port port_b, uint32_t channel_a, uint3
             // Set both IN1 and IN2 HIGH to stop the motor
             gpio_set(port_a, channel_a);   // MOTOR IN1
             gpio_set(port_b, channel_b);   // MOTOR IN2
-            // timer_set_duty_cycle(timer, timer_channel, 0);
+            timer_set_duty_cycle(timer, timer_channel, 0);
             break;
 
         case FREE:
             // // Set both IN1 and IN2 LOW
-            // gpio_clr(port_a, channel_a);    // MOTOR IN1
-            // gpio_clr(port_b, channel_b);    // MOTOR IN2
+            gpio_clr(port_a, channel_a);    // MOTOR IN1
+            gpio_clr(port_b, channel_b);    // MOTOR IN2
             timer_set_duty_cycle(timer, timer_channel, 0); // Set PWM to 0%
             break;
     }

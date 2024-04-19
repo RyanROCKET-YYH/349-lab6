@@ -219,26 +219,33 @@ void escapeSequenceTask(void *pvParameters) {
  * @brief  handle external interrupt task
  *
 */
+volatile int motorRunning = 0;
+
 void vExtiTask(void* pvParameters) {
     (void)pvParameters;
     // button
     gpio_init(BUTTON1_PORT, BUTTON1_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
-    // LED
-    gpio_init(GPIO_JP_PORT, GPIO_JP_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
+    motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, ALT2);
+    
+    // // LED
+    // gpio_init(GPIO_JP_PORT, GPIO_JP_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
     // button enable exti
-    enable_exti(BUTTON1_PORT, BUTTON1_PIN, FALLING_EDGE);
+    enable_exti(BUTTON1_PORT, BUTTON1_PIN, RISING_FALLING_EDGE);
     while (1) {
-        // the exti_flag is from exti
+        // Check if the external interrupt flag is set
         if (exti_flag) {
-            exti_flag = 0;
-            // toggle LED
-            if (gpio_read(GPIO_JP_PORT, GPIO_JP_PIN)) {
-                gpio_clr(GPIO_JP_PORT, GPIO_JP_PIN);
+            exti_flag = 0; // Clear the interrupt flag
+
+            // Toggle motor state
+            motorRunning = !motorRunning;
+
+            if (motorRunning) {
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 80, FORWARD);
             } else {
-                gpio_set(GPIO_JP_PORT, GPIO_JP_PIN);
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(100)); // Delay to debounce the button
     }
 }
 
@@ -362,7 +369,7 @@ void vMotorTask(void* pvParameters){
     // motor_init(gpio_port port_a, gpio_port port_b, gpio_port port_pwm, uint32_t channel_a, uint32_t channel_b, uint32_t channel_pwm, uint32_t timer, uint32_t timer_channel, uint32_t alt_timer)
     motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, 3, 1, ALT2);
     motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 100, BACKWARD);
-    vTaskDelay(pdMS_TO_TICKS(5000));
+    vTaskDelay(pdMS_TO_TICKS(15000));
 
     while (1) {
         // move forward
@@ -376,12 +383,12 @@ void vMotorTask(void* pvParameters){
         // // printf("Motor moving BACKWARD at 16 duty cycle\n");
 
         // // // Stop the motor
-        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 0, STOP);
-        // printf("Motor STOPPED\n");
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 0, STOP);
+        printf("Motor STOPPED\n");
 
-        // // // Free the motor
-        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 0, FREE);
-        printf("Motor is FREE\n");
+        // Free the motor
+        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 0, FREE);
+        // printf("Motor is FREE\n");
 
         // // // Print motor position
         // uint32_t pos = motor_position();
@@ -458,13 +465,13 @@ int main( void ) {
     //     tskIDLE_PRIORITY + 1, 
     //     NULL);
 
-    xTaskCreate(
-        vMotorTask, 
-        "Motor", 
-        configMINIMAL_STACK_SIZE, 
-        NULL, 
-        tskIDLE_PRIORITY + 1, 
-        NULL);
+    // xTaskCreate(
+    //     vMotorTask, 
+    //     "Motor", 
+    //     configMINIMAL_STACK_SIZE, 
+    //     NULL, 
+    //     tskIDLE_PRIORITY + 1, 
+    //     NULL);
 
     vTaskStartScheduler();
     

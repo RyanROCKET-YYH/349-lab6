@@ -39,4 +39,7 @@
 #define LEDG_PORT        0  // D13
 #define LEDG_PIN         5
 
+#define PWM_TIMER         3
+#define PWM_TIMER_CHANNEL 1
+
 #endif  // _GPIO_PIN_YUHONG_H_

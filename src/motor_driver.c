@@ -1,11 +1,11 @@
 /**
- * @file
+ * @file motor_driver.c
  *
- * @brief
+ * @brief Motor Controller - The Motor
  *
- * @date
+ * @date 04/18/2024
  *
- * @author
+ * @author Yuhong Yao (yuhongy), Yiying Li (yiyingl4)
  */
 
 #include <motor_driver.h>
@@ -14,14 +14,17 @@
 #include <timer.h>
 #include <encoder.h>
 
-
+/** @brief define unused */
 #define UNUSED __attribute__((unused))
 
-// Forward declaration of encoder_read
+/** @brief Forward declaration of encoder_read */
 extern uint32_t encoder_read(void);
 
-
-
+/**
+ * @brief  Initializes the GPIO pins for the H-Bridge/motor. 
+ * You can set the PWM period to be 4000, at 1MHz (though you can really do anything you want). Initialize PWM with a duty cycle of 0.
+ * 
+*/
 void motor_init(UNUSED gpio_port port_a, UNUSED gpio_port port_b, UNUSED gpio_port port_pwm, 
                 UNUSED uint32_t channel_a, UNUSED uint32_t channel_b, UNUSED uint32_t channel_pwm,
                 UNUSED uint32_t timer, UNUSED uint32_t timer_channel, UNUSED uint32_t alt_timer) {
@@ -44,7 +47,11 @@ void motor_init(UNUSED gpio_port port_a, UNUSED gpio_port port_b, UNUSED gpio_po
     timer_start_pwm(timer, timer_channel, prescaler, pwm_period, 0);
 }
 
-
+/**
+ * @brief  Sets the direction and speed (duty cycle of the timer pin) of the H-Bridge/motor. 
+ *  - duty cycle: the percentage the motor is on (a value between 0 and 100).
+ *  - direction: FREE (0), FORWARD (1), BACKWARD (2), STOP (3)
+*/
 void motor_set_dir(gpio_port port_a, gpio_port port_b, uint32_t channel_a, uint32_t channel_b,
                    uint32_t timer, uint32_t timer_channel, uint32_t duty_cycle, 
                    MotorDirection direction) {
@@ -80,6 +87,9 @@ void motor_set_dir(gpio_port port_a, gpio_port port_b, uint32_t channel_a, uint3
     }
 }
 
+/**
+ * @brief  Return motor position. Call encoder_read().
+*/
 uint8_t motor_position() {
     uint32_t motor_pos = encoder_read();
     return motor_pos;

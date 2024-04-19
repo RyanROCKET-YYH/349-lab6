@@ -248,6 +248,12 @@ void vExtiTask(void* pvParameters) {
 void vEncoderMonitorTask(void* pvParameters) {
     (void)pvParameters;
     encoder_init();
+
+    while(1) {
+        uint32_t enc_read = encoder_read();
+        printf("encoder_read = %ld\n", enc_read);
+        vTaskDelay(pdMS_TO_TICKS(500));
+    }
 }
 
 /**
@@ -403,6 +409,14 @@ int main( void ) {
     //     NULL,
     //     tskIDLE_PRIORITY + 1,
     //     NULL); 
+
+    xTaskCreate(
+        vEncoderMonitorTask, 
+        "EnocderMonitor", 
+        configMINIMAL_STACK_SIZE, 
+        NULL, 
+        tskIDLE_PRIORITY + 1, 
+        NULL);
 
     vTaskStartScheduler();
     

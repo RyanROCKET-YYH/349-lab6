@@ -102,9 +102,9 @@ void encoder_irq_handler() {
     if (enc_pos >= TICKS_PER_REV) {
         enc_pos = 0; // Reset position after reaching the max
     } 
-    else if (enc_pos < 0) {
+    else if (enc_pos == UINT32_MAX) {
         enc_pos = TICKS_PER_REV - 1; // Wrap around if the count goes negative
-    } //TODO: when make flash, error: comparison of unsigned expression in '< 0' is always false [-Werror=type-limits]
+    }
 }
 
 /**

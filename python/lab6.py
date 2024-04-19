@@ -31,5 +31,20 @@ def main():
     ser.close()
 
 
+# data = []
+# try:
+#     while True:
+#         if ser.in_waiting > 0:
+#             line = ser.readline().decode('utf-8').strip()
+#             print(line)
+#             if line.startswith('Encoder Position:'):
+#                 value = int(line.split(':')[1].strip())
+#                 data.append(value)
+#                 plt.plot(data)
+#                 plt.pause(0.05)
+# finally:
+#     ser.close()
+#     plt.show()
+
 if __name__ == '__main__':
     main()

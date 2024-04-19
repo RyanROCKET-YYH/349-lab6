@@ -68,43 +68,63 @@ void encoder_irq_handler() {
     case S00:
         if (enc_state == S01) {
             enc_pos++;
+            if (enc_pos >= TICKS_PER_REV) {
+                enc_pos = 0;
+            }
         } else if (enc_state == S10) {
-            enc_pos--;
+            if (enc_pos == 0) {
+                enc_pos = TICKS_PER_REV - 1;
+            } else {
+                enc_pos--;
+            }
         }
         break;
     case S01:
         if (enc_state == S11) {
             enc_pos++;
+            if (enc_pos >= TICKS_PER_REV) {
+                enc_pos = 0;
+            }
         } else if (enc_state == S00) {
-            enc_pos--;
+            if (enc_pos == 0) {
+                enc_pos = TICKS_PER_REV - 1;
+            } else {
+                enc_pos--;
+            }
         }
         break;
     case S10:
         if (enc_state == S00) {
             enc_pos++;
+            if (enc_pos >= TICKS_PER_REV) {
+                enc_pos = 0;
+            }
         } else if (enc_state == S11) {
-            enc_pos--;
+            if (enc_pos == 0) {
+                enc_pos = TICKS_PER_REV - 1;
+            } else {
+                enc_pos--;
+            }
         }
         break;
     case S11:
         if (enc_state == S10) {
             enc_pos++;
+            if (enc_pos >= TICKS_PER_REV) {
+                enc_pos = 0;
+            }
         } else if (enc_state == S01) {
-            enc_pos--;
+            if (enc_pos == 0) {
+                enc_pos = TICKS_PER_REV - 1;
+            } else {
+                enc_pos--;
+            }
         }
         break;
     default:
         break;
     }
-
     last_state = enc_state;
-    // Handle overflow
-    if (enc_pos >= TICKS_PER_REV) {
-        enc_pos = 0; // Reset position after reaching the max
-    } 
-    else if (enc_pos == UINT32_MAX) {
-        enc_pos = TICKS_PER_REV - 1; // Wrap around if the count goes negative
-    }
 }
 
 /**

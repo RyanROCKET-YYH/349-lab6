@@ -28,6 +28,7 @@
 #include <exti.h>
 #include <atcmd.h>
 #include <encoder.h>
+#include <motor_driver.h>
 
 #define YUHONG
 #ifdef YUHONG
@@ -352,6 +353,42 @@ void vPIDTask(void* pvParameters) {
 }
 
 /**
+ * @brief Motor control task
+ *
+*/
+void vMotorTask(void* pvParameters){
+    (void)pvParameters;
+    // Initialize the motor
+    // motor_init(gpio_port port_a, gpio_port port_b, gpio_port port_pwm, uint32_t channel_a, uint32_t channel_b, uint32_t channel_pwm, uint32_t timer, uint32_t timer_channel, uint32_t alt_timer)
+    motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, 3, 1, ALT2);
+
+    while (1) {
+        // move forward
+        // void motor_set_dir(gpio_port port_a, gpio_port port_b, uint32_t channel_a, uint32_t channel_b, uint32_t timer, uint32_t timer_channel, uint32_t duty_cycle, MotorDirection direction)
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 2, 1, 30, FORWARD);
+        vTaskDelay(pdMS_TO_TICKS(100));
+
+        // // move backward
+        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 2, 1, 16, BACKWARD);
+        // printf("Motor moving BACKWARD at 16 duty cycle\n");
+
+        // // Stop the motor
+        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 2, 1, 0, STOP);
+        // printf("Motor STOPPED\n");
+
+        // // Free the motor
+        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 2, 1, 0, FREE);
+        // printf("Motor is FREE\n");
+
+        // // Print motor position
+        // uint32_t pos = motor_position();
+        // printf("Current Motor Position: %lu\n", pos);
+        // vTaskDelay(pdMS_TO_TICKS(100));
+    }
+}
+
+
+/**
  * @brief main funtion
  *
 */
@@ -410,9 +447,17 @@ int main( void ) {
     //     tskIDLE_PRIORITY + 1,
     //     NULL); 
 
+    // xTaskCreate(
+    //     vEncoderMonitorTask, 
+    //     "EnocderMonitor", 
+    //     configMINIMAL_STACK_SIZE, 
+    //     NULL, 
+    //     tskIDLE_PRIORITY + 1, 
+    //     NULL);
+
     xTaskCreate(
-        vEncoderMonitorTask, 
-        "EnocderMonitor", 
+        vMotorTask, 
+        "Motor", 
         configMINIMAL_STACK_SIZE, 
         NULL, 
         tskIDLE_PRIORITY + 1, 

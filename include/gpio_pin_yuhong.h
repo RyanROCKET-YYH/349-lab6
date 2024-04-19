@@ -23,7 +23,7 @@
 #define GPIO_JP_PORT     1  // D6
 #define GPIO_JP_PIN      10
 #define MOTOR_EN_PORT    1  // D5
-#define MORTO_EN_PIN     4 
+#define MOTOR_EN_PIN     4 
 #define ENC_B_PORT       0  // D7
 #define ENC_B_PIN        8
 #define ENC_A_PORT       0  // D8

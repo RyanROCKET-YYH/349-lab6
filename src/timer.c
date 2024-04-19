@@ -14,20 +14,32 @@
 #include <nvic.h>
 #include <gpio.h>
 
+/** @brief define unused */
 #define UNUSED __attribute__((unused))
-
+/** @brief set PWM_MODE1 */
 #define PWM_MODE1 (0b110)
+/** @brief set TIM_CCMR_OC1PE */
 #define TIM_CCMR_OC1PE (1 << 3)
+/** @brief set TIM_CCMR_OC2PE */
 #define TIM_CCMR_OC2PE (1 << 11)
+/** @brief set TIM_CCER_CC1E */
 #define TIM_CCER_CC1E (1 << 0)
+/** @brief set TIM_CCER_CC1P */
 #define TIM_CCER_CC1P (1 << 1)
+/** @brief set TIM_CCER_CC2E */
 #define TIM_CCER_CC2E (1 << 4)
+/** @brief set TIM_CCER_CC2P */
 #define TIM_CCER_CC2P (1 << 5)
+/** @brief set TIM_CCER_CC3E */
 #define TIM_CCER_CC3E (1 << 8)
+/** @brief set TIM_CCER_CC3P */
 #define TIM_CCER_CC3P (1 << 9)
+/** @brief set TIM_CCER_CC4E */
 #define TIM_CCER_CC4E (1 << 12)
+/** @brief set TIM_CCER_CC4P */
 #define TIM_CCER_CC4P (1 << 13)
 
+/** @brief set PWM_MODE1 */
 struct tim2_5* const timer_base[] = {(void *)0x0,    // N/A - Don't fill out
                                      (void *)0x0,    // N/A - Don't fill out
                                      (void *)0x40000000, // TIMER 2 Base Address
@@ -79,6 +91,11 @@ void timer_init(UNUSED int timer, UNUSED uint32_t prescalar, UNUSED uint32_t per
   tim->cr1 |= 1; // Enable the timer
 }
 
+/**
+ * @brief set timer for pwm
+ *  - duty cycle: the number of ticks that you want the output to be set to HIGH. (Never be greater than period)
+ *
+*/
 void timer_start_pwm(UNUSED int timer, UNUSED uint32_t UNUSED channel, UNUSED uint32_t prescalar, UNUSED uint32_t period, UNUSED uint32_t duty_cycle) {
   if (timer < 2 || timer > 5) return; // Check for valid timer
   struct tim2_5* tim = timer_base[timer];
@@ -140,6 +157,9 @@ void timer_start_pwm(UNUSED int timer, UNUSED uint32_t UNUSED channel, UNUSED ui
   tim->cr1 |= 1; // Enable the timer
 }
 
+/**
+ * @brief dynamically set the duty cycle after you initialize the timer and its PWM mode
+*/
 void timer_set_duty_cycle(UNUSED int timer, UNUSED uint32_t channel, UNUSED uint32_t duty_cycle) {
   if (timer < 2 || timer > 5) return;
   struct tim2_5* tim = timer_base[timer];

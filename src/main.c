@@ -48,11 +48,6 @@ volatile int g_dutycycle = 16;
 /** @brief define lowest motor speed */
 #define MIN_MOTOR_SPEED 10
 
-/** @brief define LOCKED_POSITION */
-#define LOCKED_POSITION 0
-/** @brief define UNLOCKED_POSITION */
-#define UNLOCKED_POSITION 180
-
 /**
  * @brief  handle the AT+Resume command
  * 
@@ -265,11 +260,12 @@ void vExtiTask(void* pvParameters) {
 void vEncoderMonitorTask(void* pvParameters) {
     (void)pvParameters;
     encoder_init();
-
+    uint32_t enc_read = 0;
     while(1) {
-        uint32_t enc_read = encoder_read();
+        enc_read = encoder_read();
         printf("encoder_read = %ld\n", enc_read);
-        vTaskDelay(pdMS_TO_TICKS(500));
+        if()
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
@@ -317,6 +313,15 @@ void vPIDTask(void* pvParameters) {
     char input[16];
     int index = 0;
 
+    // PID control variables
+    int32_t error = 0;
+    int32_t previous_error = 0;
+    float integral = 0.0f;
+    uint32_t target_position = 512; // 180 degree of the motor
+
+    encoder_init();
+    uint32_t enc_read = 0;
+    uint32_t last_enc_read = 0;
     lcd_driver_init();
     for (;;) {
         for (int i = 0; i < 3; i++) {
@@ -363,7 +368,40 @@ void vPIDTask(void* pvParameters) {
         lcd_print(summary1);
         lcd_set_cursor(1,0);
         lcd_print(summary2);
-        vTaskDelay(pdMS_TO_TICKS(5000));
+
+        // PID Control Logic
+        enc_read = encoder_read();
+        error = target_position - enc_read;
+
+        // takes the shortest path back to the target set-point
+        if (error > 512){
+            error -= 1024;
+        }
+        else if (error < -512){
+            error += 1024;
+        }
+
+        integral += error; // Update integral
+        float derivative = error - previous_error; // calculate derivative
+        float output = pidParams.P * error + pidParams.I * integral + pidParams.D * derivative; // PID output
+        previous_error = error; // Update previous error
+
+        // motor speed and direction
+        int motor_speed = (int)abs(output);
+        MotorDirection direction = output > 0 ? FORWARD : BACKWARD;
+
+        // motor speed limit
+        if (motor_speed > MAX_MOTOR_SPEED){
+            motor_speed = MAX_MOTOR_SPEED;
+        }
+        else if (motor_speed < MIN_MOTOR_SPEED){
+            motor_speed = MIN_MOTOR_SPEED;
+        }
+
+        // Set motor speed and direction (Assuming motor_set_dir parameters)
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, motor_speed, direction);
+
+        vTaskDelay(pdMS_TO_TICKS(100)); // Update rate
     }
 
 }

@@ -30,7 +30,7 @@
 #include <encoder.h>
 #include <motor_driver.h>
 
-#define YUHONG
+#define YIYING
 #ifdef YUHONG
 #include "gpio_pin_yuhong.h"
 #elif defined YIYING
@@ -43,6 +43,15 @@ atcmd_parser_t parser;
 /** @brief define passcode */
 int g_passcode = 349;
 volatile int g_dutycycle = 16;
+/** @brief define highest motor speed */
+#define MAX_MOTOR_SPEED 90
+/** @brief define lowest motor speed */
+#define MIN_MOTOR_SPEED 10
+
+/** @brief define LOCKED_POSITION */
+#define LOCKED_POSITION 0
+/** @brief define UNLOCKED_POSITION */
+#define UNLOCKED_POSITION 180
 
 /**
  * @brief  handle the AT+Resume command
@@ -372,19 +381,19 @@ void vMotorTask(void* pvParameters){
     vTaskDelay(pdMS_TO_TICKS(2000));
 
     while (1) {
-        move forward
+        // move forward
         printf("Motor moving FORWARD\n");
         // void motor_set_dir(gpio_port port_a, gpio_port port_b, uint32_t channel_a, uint32_t channel_b, uint32_t timer, uint32_t timer_channel, uint32_t duty_cycle, MotorDirection direction)
         motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 60, FORWARD);
         vTaskDelay(pdMS_TO_TICKS(2000));
 
-        // // move backward
+        // move backward
         printf("Motor moving BACKWARD\n");
         motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 30, BACKWARD);
         vTaskDelay(pdMS_TO_TICKS(2000));
         
 
-        // // Stop the motor
+        // Stop the motor
         printf("Motor STOPPED\n");
         motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
         vTaskDelay(pdMS_TO_TICKS(2000));
@@ -395,10 +404,68 @@ void vMotorTask(void* pvParameters){
         vTaskDelay(pdMS_TO_TICKS(2000));
         
 
-        // // // Print motor position
+        // Print motor position
         // uint32_t pos = motor_position();
         // printf("Current Motor Position: %lu\n", pos);
         vTaskDelay(pdMS_TO_TICKS(100));
+    }
+}
+
+/**
+ * @brief  handle servo task
+ *
+*/
+void vServoTask(void *pvParameters) { //TODO: haven't to test it
+    (void)pvParameters;
+    /** @brief servo's states */
+    typedef enum {
+        DEGREE_0,
+        DEGREE_90,
+        DEGREE_180
+    } ServoPosition;
+
+    // SERVO 1
+    gpio_init(SERVO_PORT, SERVO_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
+    servo_enable(0, 1);
+    servo_set(0, 0); // initialized to lock state
+    int32_t servo_state = DEGREE_0;
+    int32_t last_servo_state = DEGREE_0;
+    int32_t servo_degree = 0;
+    for (;;) {
+        // when degree = 0
+        if(servo_state == DEGREE_0){
+            // turn to 90
+            servo_set(0, 90);
+            // update state
+            servo_state = DEGREE_90;
+            last_servo_state = DEGREE_0;
+        }
+        // when degree = 90, last_servo_state = 0
+        else if((servo_state == DEGREE_90) && (last_servo_state == DEGREE_0)){
+            // turn to 180
+            servo_set(0, 180);
+            // update state
+            servo_state = DEGREE_180;
+            last_servo_state = DEGREE_90;
+        }
+        // when degree = 180
+        else if(servo_state == DEGREE_180){
+            // turn to 90
+            servo_set(0, 90);
+            // update state
+            servo_state = DEGREE_90;
+            last_servo_state = DEGREE_180;
+        }
+        // when degree = 90, last_servo_state = 180
+        else if((servo_state == DEGREE_90) &&  (last_servo_state == DEGREE_180)){
+            // turn to 0
+            servo_set(0, 0);
+            // update state
+            servo_state = DEGREE_0;
+            last_servo_state = DEGREE_90;
+        }
+    
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
@@ -454,13 +521,13 @@ int main( void ) {
         tskIDLE_PRIORITY + 1, 
         NULL);
     
-    // xTaskCreate(
-    //     vHardPWM,
-    //     "HardPWM",
-    //     configMINIMAL_STACK_SIZE,
-    //     NULL,
-    //     tskIDLE_PRIORITY + 1,
-    //     NULL); 
+    xTaskCreate(
+        vHardPWM,
+        "HardPWM",
+        configMINIMAL_STACK_SIZE,
+        NULL,
+        tskIDLE_PRIORITY + 1,
+        NULL); 
 
     // xTaskCreate(
     //     vEncoderMonitorTask, 
@@ -473,6 +540,15 @@ int main( void ) {
     // xTaskCreate(
     //     vMotorTask, 
     //     "Motor", 
+    //     configMINIMAL_STACK_SIZE, 
+    //     NULL, 
+    //     tskIDLE_PRIORITY + 1, 
+    //     NULL);
+
+
+    // xTaskCreate(
+    //     vServoTask, 
+    //     "Servo", 
     //     configMINIMAL_STACK_SIZE, 
     //     NULL, 
     //     tskIDLE_PRIORITY + 1, 

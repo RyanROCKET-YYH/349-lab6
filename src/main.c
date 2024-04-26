@@ -487,10 +487,10 @@ void vServoTask(void *pvParameters) {
     (void)pvParameters;
 
     // SERVO 1
-    int8_t yuhong_servo = 1;
+    int8_t servo_channle = 1; // yuhong channel 1, yiling channel 0
     gpio_init(SERVO_PORT, SERVO_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
-    servo_enable(yuhong_servo, 1);
-    servo_set(yuhong_servo, 0); // initialized to lock state
+    servo_enable(servo_channle, 1);
+    servo_set(servo_channle, 0); // initialized to lock state
     int32_t servo_state = DEGREE_0;
     int32_t last_servo_state = DEGREE_0;
     // int32_t servo_degree = 0;
@@ -498,7 +498,7 @@ void vServoTask(void *pvParameters) {
         // when degree = 0
         if(servo_state == DEGREE_0){
             // turn to 90
-            servo_set(yuhong_servo, 90);
+            servo_set(servo_channle, 90);
             // update state
             servo_state = DEGREE_90;
             last_servo_state = DEGREE_0;
@@ -506,7 +506,7 @@ void vServoTask(void *pvParameters) {
         // when degree = 90, last_servo_state = 0
         else if((servo_state == DEGREE_90) && (last_servo_state == DEGREE_0)){
             // turn to 180
-            servo_set(yuhong_servo, 180);
+            servo_set(servo_channle, 180);
             // update state
             servo_state = DEGREE_180;
             last_servo_state = DEGREE_90;
@@ -514,7 +514,7 @@ void vServoTask(void *pvParameters) {
         // when degree = 180
         else if(servo_state == DEGREE_180){
             // turn to 90
-            servo_set(yuhong_servo, 90);
+            servo_set(servo_channle, 90);
             // update state
             servo_state = DEGREE_90;
             last_servo_state = DEGREE_180;
@@ -522,7 +522,7 @@ void vServoTask(void *pvParameters) {
         // when degree = 90, last_servo_state = 180
         else if((servo_state == DEGREE_90) &&  (last_servo_state == DEGREE_180)){
             // turn to 0
-            servo_set(yuhong_servo, 0);
+            servo_set(servo_channle, 0);
             // update state
             servo_state = DEGREE_0;
             last_servo_state = DEGREE_90;

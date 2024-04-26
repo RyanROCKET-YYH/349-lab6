@@ -30,7 +30,7 @@
 #include <encoder.h>
 #include <motor_driver.h>
 
-#define YUHONG
+#define YIYING
 #ifdef YUHONG
 #include "gpio_pin_yuhong.h"
 #elif defined YIYING
@@ -43,6 +43,10 @@ atcmd_parser_t parser;
 /** @brief define passcode */
 int g_passcode = 349;
 volatile int g_dutycycle = 16;
+/** @brief define highest motor speed */
+#define MAX_MOTOR_SPEED 90
+/** @brief define lowest motor speed */
+#define MIN_MOTOR_SPEED 10
 
 /**
  * @brief  handle the AT+Resume command
@@ -215,39 +219,61 @@ void escapeSequenceTask(void *pvParameters) {
     }
 }
 
+/** @brief  flag: if motor is running*/
+volatile int motorRunning = 0;
 /**
  * @brief  handle external interrupt task
  *
 */
-volatile int motorRunning = 0;
-
 void vExtiTask(void* pvParameters) {
     (void)pvParameters;
     // button
     gpio_init(BUTTON1_PORT, BUTTON1_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
-    motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, ALT2);
+    gpio_init(BUTTON2_PORT, BUTTON2_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
+    // motor init
+    motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, MOTOR_INIT_ALT);
     
     // // LED
     // gpio_init(GPIO_JP_PORT, GPIO_JP_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
-    // button enable exti
-    enable_exti(BUTTON1_PORT, BUTTON1_PIN, RISING_EDGE);
+
+    // enable exti
+    encoder_init();
+    enable_exti(BUTTON1_PORT, BUTTON1_PIN, RISING_FALLING_EDGE);
+    enable_exti(BUTTON2_PORT, BUTTON2_PIN, RISING_FALLING_EDGE);
     while (1) {
-        // Check if the external interrupt flag is set
-        if (exti_flag) {
-            exti_flag = 0; // Clear the interrupt flag
+
+        // BACKWARD
+        if(exti_flag_backward){
+            exti_flag_backward = 0; // Clear the interrupt flag
 
             // Toggle motor state
             motorRunning = !motorRunning;
 
             if (motorRunning) {
-                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 80, FORWARD);
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 20, BACKWARD); // backward
+                vTaskDelay(pdMS_TO_TICKS(200));
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
             } else {
                 motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
             }
         }
-        uint32_t motor_pos = motor_position();
-        printf("Motor_position = %ld\n", motor_pos);
-        vTaskDelay(pdMS_TO_TICKS(100)); // Delay to debounce the button
+
+        // FORWARD
+        if (exti_flag_forward) {
+            exti_flag_forward = 0; // Clear the interrupt flag
+
+            // Toggle motor state
+            motorRunning = !motorRunning;
+
+            if (motorRunning) {
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 20, FORWARD); // forward
+                vTaskDelay(pdMS_TO_TICKS(200));
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
+            } else {
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
+            }
+        }
+        vTaskDelay(pdMS_TO_TICKS(300)); // Delay to debounce the button
     }
 }
 
@@ -258,11 +284,11 @@ void vExtiTask(void* pvParameters) {
 void vEncoderMonitorTask(void* pvParameters) {
     (void)pvParameters;
     encoder_init();
-
+    uint32_t enc_read = 0;
     while(1) {
-        uint32_t enc_read = encoder_read();
+        enc_read = encoder_read();
         printf("encoder_read = %ld\n", enc_read);
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
@@ -270,6 +296,15 @@ void vEncoderMonitorTask(void* pvParameters) {
  * @brief  handle Hardware-driven PWM task
  *
 */
+// void vHardPWM(void* pvParameters) {
+//     (void)pvParameters;
+//     gpio_init(SERVO_PORT, SERVO_PIN, MODE_ALT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
+//     timer_start_pwm(TIM_SERVO, TIM_channel_SERVO, 100, 16, g_dutycycle);
+//     for (;;) {
+//         timer_set_duty_cycle(TIM_SERVO, TIM_channel_SERVO, g_dutycycle);
+//         vTaskDelay(pdMS_TO_TICKS(500));
+//     }
+// }
 void vHardPWM(void* pvParameters) {
     (void)pvParameters;
     gpio_init(GPIO_B, 4, MODE_ALT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
@@ -310,6 +345,15 @@ void vPIDTask(void* pvParameters) {
     char input[16];
     int index = 0;
 
+    // PID control variables
+    int32_t error = 0;
+    int32_t previous_error = 0;
+    float integral = 0.0f;
+    uint32_t target_position = 512; // 180 degree of the motor
+
+    encoder_init();
+    uint32_t enc_read = 0;
+    // uint32_t last_enc_read = 0;
     lcd_driver_init();
     for (;;) {
         for (int i = 0; i < 3; i++) {
@@ -356,7 +400,42 @@ void vPIDTask(void* pvParameters) {
         lcd_print(summary1);
         lcd_set_cursor(1,0);
         lcd_print(summary2);
-        vTaskDelay(pdMS_TO_TICKS(5000));
+
+        // PID Control Logic //TODO: haven't test it
+        enc_read = encoder_read();
+        error = target_position - enc_read;
+
+        // takes the shortest path back to the target set-point
+        if (error > 512){
+            error -= 1024;
+        }
+        else if (error < -512){
+            error += 1024;
+        }
+
+        integral += error; // Update integral
+        float derivative = error - previous_error; // calculate derivative
+        float output = pidParams.P * error + pidParams.I * integral + pidParams.D * derivative; // PID output
+        previous_error = error; // Update previous error
+
+        // motor speed and direction
+        int motor_speed = (int)abs((int)output);
+        MotorDirection direction = output > 0 ? FORWARD : BACKWARD;
+
+        // motor speed limit
+        if (motor_speed > MAX_MOTOR_SPEED){
+            motor_speed = MAX_MOTOR_SPEED;
+        }
+        else if (motor_speed < MIN_MOTOR_SPEED){
+            motor_speed = MIN_MOTOR_SPEED;
+        }
+
+        // Set motor speed and direction (Assuming motor_set_dir parameters)
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, motor_speed, direction);
+        vTaskDelay(pdMS_TO_TICKS(50)); // Update rate
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
+
+        vTaskDelay(pdMS_TO_TICKS(3000)); // Update rate
     }
 
 }
@@ -369,33 +448,95 @@ void vMotorTask(void* pvParameters){
     (void)pvParameters;
     // Initialize the motor
     // motor_init(gpio_port port_a, gpio_port port_b, gpio_port port_pwm, uint32_t channel_a, uint32_t channel_b, uint32_t channel_pwm, uint32_t timer, uint32_t timer_channel, uint32_t alt_timer)
-    motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, 3, 1, ALT2);
-    motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 100, BACKWARD);
-    vTaskDelay(pdMS_TO_TICKS(15000));
+    motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, MOTOR_INIT_ALT);
+    motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 100, BACKWARD);
+    vTaskDelay(pdMS_TO_TICKS(2000));
 
     while (1) {
         // move forward
+        printf("Motor moving FORWARD\n");
         // void motor_set_dir(gpio_port port_a, gpio_port port_b, uint32_t channel_a, uint32_t channel_b, uint32_t timer, uint32_t timer_channel, uint32_t duty_cycle, MotorDirection direction)
-        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 60, BACKWARD);
-        // vTaskDelay(pdMS_TO_TICKS(10000));
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 60, FORWARD);
+        vTaskDelay(pdMS_TO_TICKS(2000));
 
-        // // // move backward
-        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 30, BACKWARD);
-        // vTaskDelay(pdMS_TO_TICKS(10000));
-        // // printf("Motor moving BACKWARD at 16 duty cycle\n");
+        // move backward
+        printf("Motor moving BACKWARD\n");
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 30, BACKWARD);
+        vTaskDelay(pdMS_TO_TICKS(2000));
+        
 
-        // // // Stop the motor
-        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 0, STOP);
+        // Stop the motor
         printf("Motor STOPPED\n");
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
+        vTaskDelay(pdMS_TO_TICKS(2000));
 
         // Free the motor
-        // motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, 3, 1, 0, FREE);
-        // printf("Motor is FREE\n");
+        printf("Motor is FREE\n");
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, FREE);
+        vTaskDelay(pdMS_TO_TICKS(2000));
+        
 
-        // // // Print motor position
+        // Print motor position
         // uint32_t pos = motor_position();
         // printf("Current Motor Position: %lu\n", pos);
         vTaskDelay(pdMS_TO_TICKS(100));
+    }
+}
+
+/** @brief servo's states */
+#define DEGREE_0 0
+#define DEGREE_90 1
+#define DEGREE_180 2
+
+/**
+ * @brief  handle servo task
+ *
+*/
+void vServoTask(void *pvParameters) { //TODO: haven't test it
+    (void)pvParameters;
+
+    // SERVO 1
+    gpio_init(SERVO_PORT, SERVO_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
+    servo_enable(0, 1);
+    servo_set(0, 0); // initialized to lock state
+    int32_t servo_state = DEGREE_0;
+    int32_t last_servo_state = DEGREE_0;
+    // int32_t servo_degree = 0;
+    for (;;) {
+        // when degree = 0
+        if(servo_state == DEGREE_0){
+            // turn to 90
+            servo_set(0, 90);
+            // update state
+            servo_state = DEGREE_90;
+            last_servo_state = DEGREE_0;
+        }
+        // when degree = 90, last_servo_state = 0
+        else if((servo_state == DEGREE_90) && (last_servo_state == DEGREE_0)){
+            // turn to 180
+            servo_set(0, 180);
+            // update state
+            servo_state = DEGREE_180;
+            last_servo_state = DEGREE_90;
+        }
+        // when degree = 180
+        else if(servo_state == DEGREE_180){
+            // turn to 90
+            servo_set(0, 90);
+            // update state
+            servo_state = DEGREE_90;
+            last_servo_state = DEGREE_180;
+        }
+        // when degree = 90, last_servo_state = 180
+        else if((servo_state == DEGREE_90) &&  (last_servo_state == DEGREE_180)){
+            // turn to 0
+            servo_set(0, 0);
+            // update state
+            servo_state = DEGREE_0;
+            last_servo_state = DEGREE_90;
+        }
+    
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
@@ -470,6 +611,15 @@ int main( void ) {
     // xTaskCreate(
     //     vMotorTask, 
     //     "Motor", 
+    //     configMINIMAL_STACK_SIZE, 
+    //     NULL, 
+    //     tskIDLE_PRIORITY + 1, 
+    //     NULL);
+
+
+    // xTaskCreate(
+    //     vServoTask, 
+    //     "Servo", 
     //     configMINIMAL_STACK_SIZE, 
     //     NULL, 
     //     tskIDLE_PRIORITY + 1, 

@@ -4,7 +4,7 @@
 #include <keypad_driver.h>
 #include <unistd.h>
 
-#define YUHONG
+#define YIYING
 #ifdef YUHONG
 #include "gpio_pin_yuhong.h"
 #elif defined YIYING

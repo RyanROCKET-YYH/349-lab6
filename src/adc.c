@@ -70,6 +70,7 @@ struct adc_reg_map {
 /** @brief ADC regular sequence register 1 -- Regularchannelsequencelength */
 #define ADC1_SQR1_L (0xF << 20)
 
+/** @brief define mutex for adc */
 SemaphoreHandle_t adc_mutex;
 
 /**

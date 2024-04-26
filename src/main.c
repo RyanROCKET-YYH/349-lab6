@@ -219,37 +219,61 @@ void escapeSequenceTask(void *pvParameters) {
     }
 }
 
+/** @brief  flag: if motor is running*/
+volatile int motorRunning = 0;
 /**
  * @brief  handle external interrupt task
  *
 */
-volatile int motorRunning = 0;
-
 void vExtiTask(void* pvParameters) {
     (void)pvParameters;
     // button
     gpio_init(BUTTON1_PORT, BUTTON1_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
+    gpio_init(BUTTON2_PORT, BUTTON2_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
+    // motor init
     motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, MOTOR_INIT_ALT);
     
     // // LED
     // gpio_init(GPIO_JP_PORT, GPIO_JP_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
-    // button enable exti
+
+    // enable exti
+    encoder_init();
     enable_exti(BUTTON1_PORT, BUTTON1_PIN, RISING_FALLING_EDGE);
+    enable_exti(BUTTON2_PORT, BUTTON2_PIN, RISING_FALLING_EDGE);
     while (1) {
-        // Check if the external interrupt flag is set
-        if (exti_flag) {
-            exti_flag = 0; // Clear the interrupt flag
+
+        // BACKWARD
+        if(exti_flag_backward){
+            exti_flag_backward = 0; // Clear the interrupt flag
 
             // Toggle motor state
             motorRunning = !motorRunning;
 
             if (motorRunning) {
-                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 80, FORWARD);
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 20, BACKWARD); // backward
+                vTaskDelay(pdMS_TO_TICKS(200));
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
             } else {
                 motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(100)); // Delay to debounce the button
+
+        // FORWARD
+        if (exti_flag_forward) {
+            exti_flag_forward = 0; // Clear the interrupt flag
+
+            // Toggle motor state
+            motorRunning = !motorRunning;
+
+            if (motorRunning) {
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 20, FORWARD); // forward
+                vTaskDelay(pdMS_TO_TICKS(200));
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
+            } else {
+                motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
+            }
+        }
+        vTaskDelay(pdMS_TO_TICKS(300)); // Delay to debounce the button
     }
 }
 
@@ -264,7 +288,6 @@ void vEncoderMonitorTask(void* pvParameters) {
     while(1) {
         enc_read = encoder_read();
         printf("encoder_read = %ld\n", enc_read);
-        if()
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
@@ -273,6 +296,15 @@ void vEncoderMonitorTask(void* pvParameters) {
  * @brief  handle Hardware-driven PWM task
  *
 */
+// void vHardPWM(void* pvParameters) {
+//     (void)pvParameters;
+//     gpio_init(SERVO_PORT, SERVO_PIN, MODE_ALT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
+//     timer_start_pwm(TIM_SERVO, TIM_channel_SERVO, 100, 16, g_dutycycle);
+//     for (;;) {
+//         timer_set_duty_cycle(TIM_SERVO, TIM_channel_SERVO, g_dutycycle);
+//         vTaskDelay(pdMS_TO_TICKS(500));
+//     }
+// }
 void vHardPWM(void* pvParameters) {
     (void)pvParameters;
     gpio_init(GPIO_B, 4, MODE_ALT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
@@ -321,7 +353,7 @@ void vPIDTask(void* pvParameters) {
 
     encoder_init();
     uint32_t enc_read = 0;
-    uint32_t last_enc_read = 0;
+    // uint32_t last_enc_read = 0;
     lcd_driver_init();
     for (;;) {
         for (int i = 0; i < 3; i++) {
@@ -369,7 +401,7 @@ void vPIDTask(void* pvParameters) {
         lcd_set_cursor(1,0);
         lcd_print(summary2);
 
-        // PID Control Logic
+        // PID Control Logic //TODO: haven't test it
         enc_read = encoder_read();
         error = target_position - enc_read;
 
@@ -387,7 +419,7 @@ void vPIDTask(void* pvParameters) {
         previous_error = error; // Update previous error
 
         // motor speed and direction
-        int motor_speed = (int)abs(output);
+        int motor_speed = (int)abs((int)output);
         MotorDirection direction = output > 0 ? FORWARD : BACKWARD;
 
         // motor speed limit
@@ -400,8 +432,10 @@ void vPIDTask(void* pvParameters) {
 
         // Set motor speed and direction (Assuming motor_set_dir parameters)
         motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, motor_speed, direction);
+        vTaskDelay(pdMS_TO_TICKS(50)); // Update rate
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
 
-        vTaskDelay(pdMS_TO_TICKS(100)); // Update rate
+        vTaskDelay(pdMS_TO_TICKS(3000)); // Update rate
     }
 
 }
@@ -449,26 +483,25 @@ void vMotorTask(void* pvParameters){
     }
 }
 
+/** @brief servo's states */
+#define DEGREE_0 0
+#define DEGREE_90 1
+#define DEGREE_180 2
+
 /**
  * @brief  handle servo task
  *
 */
-void vServoTask(void *pvParameters) { //TODO: haven't to test it
+void vServoTask(void *pvParameters) { //TODO: haven't test it
     (void)pvParameters;
-    /** @brief servo's states */
-    typedef enum {
-        DEGREE_0,
-        DEGREE_90,
-        DEGREE_180
-    } ServoPosition;
 
     // SERVO 1
-    gpio_init(SERVO_PORT, SERVO_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
+    gpio_init(SERVO_PORT, SERVO_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
     servo_enable(0, 1);
     servo_set(0, 0); // initialized to lock state
     int32_t servo_state = DEGREE_0;
     int32_t last_servo_state = DEGREE_0;
-    int32_t servo_degree = 0;
+    // int32_t servo_degree = 0;
     for (;;) {
         // when degree = 0
         if(servo_state == DEGREE_0){
@@ -559,13 +592,13 @@ int main( void ) {
         tskIDLE_PRIORITY + 1, 
         NULL);
     
-    xTaskCreate(
-        vHardPWM,
-        "HardPWM",
-        configMINIMAL_STACK_SIZE,
-        NULL,
-        tskIDLE_PRIORITY + 1,
-        NULL); 
+    // xTaskCreate(
+    //     vHardPWM,
+    //     "HardPWM",
+    //     configMINIMAL_STACK_SIZE,
+    //     NULL,
+    //     tskIDLE_PRIORITY + 1,
+    //     NULL); 
 
     // xTaskCreate(
     //     vEncoderMonitorTask, 

@@ -19,28 +19,31 @@
 // #define ROW3_PIN   6
 // #define ROW4_PORT  0    // D8	PA_9
 // #define ROW4_PIN   9
-#define COL1_PORT  0 //PA8
+#define COL1_PORT  0 // D7(PA8)
 #define COL1_PIN   8
-#define COL2_PORT  1 //PB5 //TODO:
+#define COL2_PORT  1 // D4(PB5) //TODO:
 #define COL2_PIN   5
-#define COL3_PORT  2 //PC7
+#define COL3_PORT  2 // D9(PC7)
 #define COL3_PIN   7
 
-#define ROW1_PORT  1 //PB10
+#define ROW1_PORT  1 // D6(PB10)
 #define ROW1_PIN   10
-#define ROW2_PORT  0 //PA7
+#define ROW2_PORT  0 // D11(PA7)
 #define ROW2_PIN   7
-#define ROW3_PORT  1 //PB6
+#define ROW3_PORT  1 // D10(PB6)
 #define ROW3_PIN   6
-#define ROW4_PORT  0 //PA9
+#define ROW4_PORT  0 // D8(PA9)
 #define ROW4_PIN   9
 
-#define SERVO_PORT       3  // D4 TODO:
-#define SERVO_PIN        5 
+#define SERVO_PORT       1  // A5(PC_0) TODO: //new: A3(PB0)
+#define SERVO_PIN        0 
+#define TIM_SERVO        3
+#define TIM_channel_SERVO        3
+
 #define GPIO_JP_PORT     0  // Green LED: PA_10(0, 10)
 #define GPIO_JP_PIN      10
 
-#define BUTTON1_PORT     1  // A3(PB0) // BUTTON for exti
+#define BUTTON1_PORT     2  // A3(PB0) // BUTTON for exti TODO: //new: A5(PC_0)
 #define BUTTON1_PIN      0
 #define BUTTON2_PORT     0  // A2(PA_4)
 #define BUTTON2_PIN      4

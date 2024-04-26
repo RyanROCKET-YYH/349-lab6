@@ -30,6 +30,8 @@
 
 /** @brief EXTI_PR0 */
 #define EXTI_PR0    (1)
+/** @brief EXTI_PR4 */
+#define EXTI_PR4    (1 << 4)
 /** @brief EXTI_PR5 */
 #define EXTI_PR5    (1 << 5)
 /** @brief EXTI_PR6 */
@@ -57,7 +59,8 @@
 #define EXTI15_10_INT_NUM (40)
 
 /** @brief define exti flag */
-volatile uint8_t exti_flag = 0;
+volatile uint8_t exti_flag_forward = 0;
+volatile uint8_t exti_flag_backward = 0;
 
 /** @brief syscfg */
 struct syscfg_reg_map {
@@ -182,10 +185,10 @@ void EXTI9_5_IRQHandler(void) {
         exti_clear_pending_bit(6);
     }
 
-    if (exti->pr & EXTI_PR7) { 
-        exti_flag = 1;
-        exti_clear_pending_bit(7);
-    }
+    // if (exti->pr & EXTI_PR7) { 
+    //     // exti_flag = 1;
+    //     exti_clear_pending_bit(7);
+    // }
 
     // For YUHONG's encoder
     if (exti->pr & (EXTI_PR8 | EXTI_PR9)) {
@@ -200,15 +203,33 @@ void EXTI9_5_IRQHandler(void) {
 
 /**
  * @brief  EXTI0 Interrupt Handler: used in boot.S
- *
+ *         FOR YIYING's forward button
 */
 void EXTI0_IRQHandler(void) {
+    // breakpoint();
     struct exti_reg_map* exti = EXTI_BASE;
     // For YIYING's LED toggle, boot.s: .word   EXTI0_IRQHandler                /* 22 IRQ6 EXTI0 */
     if (exti->pr & EXTI_PR0) { 
-        exti_flag = 1;
+        exti_flag_forward = 1;
         exti_clear_pending_bit(0);
     }
     
     nvic_clear_pending(EXTI0_INT_NUM);
+}
+
+/**
+ * @brief  EXTI4 Interrupt Handler: used in boot.S
+ *         FOR YIYING's backward button
+ *
+*/
+void EXTI4_IRQHandler(void){
+    // breakpoint();
+    struct exti_reg_map* exti = EXTI_BASE;
+    // For YIYING's LED toggle, boot.s: .word   EXTI4_IRQHandler                /* 26 IRQ6 EXTI4 */
+    if (exti->pr & EXTI_PR4){
+        exti_flag_backward = 1;
+        exti_clear_pending_bit(4);
+    }
+    // breakpoint();
+    nvic_clear_pending(EXTI4_INT_NUM);
 }

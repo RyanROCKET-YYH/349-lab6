@@ -230,7 +230,7 @@ void vExtiTask(void* pvParameters) {
     // // LED
     // gpio_init(GPIO_JP_PORT, GPIO_JP_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
     // button enable exti
-    enable_exti(BUTTON1_PORT, BUTTON1_PIN, RISING_FALLING_EDGE);
+    enable_exti(BUTTON1_PORT, BUTTON1_PIN, RISING_EDGE);
     while (1) {
         // Check if the external interrupt flag is set
         if (exti_flag) {
@@ -245,6 +245,8 @@ void vExtiTask(void* pvParameters) {
                 motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
             }
         }
+        uint32_t motor_pos = motor_position();
+        printf("Motor_position = %ld\n", motor_pos);
         vTaskDelay(pdMS_TO_TICKS(100)); // Delay to debounce the button
     }
 }

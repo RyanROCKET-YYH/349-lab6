@@ -20,7 +20,7 @@
 /** @brief macro for channel 0 pin */
 #define CHANNEL0_PIN (10)
 /** @brief macro for channel 1 pin */
-#define CHANNEL1_PIN (2)
+#define CHANNEL1_PIN (5)
 /** @brief macro for servo period */
 #define SERVO_PERIOD (200)
 
@@ -51,7 +51,7 @@ typedef struct {
  */
 ServoChannel servos[2] = {
     {15, SERVO_PERIOD - 15, 0, GPIO_A, CHANNEL0_PIN, 0, 0},
-    {15, SERVO_PERIOD - 15, 0, GPIO_A, CHANNEL1_PIN, 0, 0}
+    {15, SERVO_PERIOD - 15, 0, GPIO_B, CHANNEL1_PIN, 0, 0}
 };
 
 /**
@@ -107,13 +107,13 @@ void tim5_irq_handler() {
             s2->current_tick++;
             if (s2->is_high) {
                 if (s2->current_tick >= s2->high_tick) {
-                    gpio_clr(GPIO_A, CHANNEL1_PIN);
+                    gpio_clr(GPIO_B, CHANNEL1_PIN);
                     s2->is_high = 0;
                     s2->current_tick = 0;
                 }
             } else {
                 if (s2->current_tick >= s2->low_tick) {
-                    gpio_set(GPIO_A, CHANNEL1_PIN);
+                    gpio_set(GPIO_B, CHANNEL1_PIN);
                     s2->is_high = 1;
                     s2->current_tick = 0;
                 }

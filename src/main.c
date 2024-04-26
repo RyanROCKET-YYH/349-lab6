@@ -30,7 +30,7 @@
 #include <encoder.h>
 #include <motor_driver.h>
 
-#define YIYING
+#define YUHONG
 #ifdef YUHONG
 #include "gpio_pin_yuhong.h"
 #elif defined YIYING
@@ -158,7 +158,7 @@ void vBlinkyTask(void *pvParameters) {
         } else {
             gpio_set(LEDG_PORT, LEDG_PIN);
         }
-        // wait for 1000 millisec
+        // wait for 500 millisec
         vTaskDelay(pdMS_TO_TICKS(500));
     }
 }
@@ -296,15 +296,6 @@ void vEncoderMonitorTask(void* pvParameters) {
  * @brief  handle Hardware-driven PWM task
  *
 */
-// void vHardPWM(void* pvParameters) {
-//     (void)pvParameters;
-//     gpio_init(SERVO_PORT, SERVO_PIN, MODE_ALT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
-//     timer_start_pwm(TIM_SERVO, TIM_channel_SERVO, 100, 16, g_dutycycle);
-//     for (;;) {
-//         timer_set_duty_cycle(TIM_SERVO, TIM_channel_SERVO, g_dutycycle);
-//         vTaskDelay(pdMS_TO_TICKS(500));
-//     }
-// }
 void vHardPWM(void* pvParameters) {
     (void)pvParameters;
     gpio_init(GPIO_B, 4, MODE_ALT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
@@ -492,13 +483,14 @@ void vMotorTask(void* pvParameters){
  * @brief  handle servo task
  *
 */
-void vServoTask(void *pvParameters) { //TODO: haven't test it
+void vServoTask(void *pvParameters) {
     (void)pvParameters;
 
     // SERVO 1
-    gpio_init(SERVO_PORT, SERVO_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT2);
-    servo_enable(0, 1);
-    servo_set(0, 0); // initialized to lock state
+    int8_t yuhong_servo = 1;
+    gpio_init(SERVO_PORT, SERVO_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
+    servo_enable(yuhong_servo, 1);
+    servo_set(yuhong_servo, 0); // initialized to lock state
     int32_t servo_state = DEGREE_0;
     int32_t last_servo_state = DEGREE_0;
     // int32_t servo_degree = 0;
@@ -506,7 +498,7 @@ void vServoTask(void *pvParameters) { //TODO: haven't test it
         // when degree = 0
         if(servo_state == DEGREE_0){
             // turn to 90
-            servo_set(0, 90);
+            servo_set(yuhong_servo, 90);
             // update state
             servo_state = DEGREE_90;
             last_servo_state = DEGREE_0;
@@ -514,7 +506,7 @@ void vServoTask(void *pvParameters) { //TODO: haven't test it
         // when degree = 90, last_servo_state = 0
         else if((servo_state == DEGREE_90) && (last_servo_state == DEGREE_0)){
             // turn to 180
-            servo_set(0, 180);
+            servo_set(yuhong_servo, 180);
             // update state
             servo_state = DEGREE_180;
             last_servo_state = DEGREE_90;
@@ -522,7 +514,7 @@ void vServoTask(void *pvParameters) { //TODO: haven't test it
         // when degree = 180
         else if(servo_state == DEGREE_180){
             // turn to 90
-            servo_set(0, 90);
+            servo_set(yuhong_servo, 90);
             // update state
             servo_state = DEGREE_90;
             last_servo_state = DEGREE_180;
@@ -530,7 +522,7 @@ void vServoTask(void *pvParameters) { //TODO: haven't test it
         // when degree = 90, last_servo_state = 180
         else if((servo_state == DEGREE_90) &&  (last_servo_state == DEGREE_180)){
             // turn to 0
-            servo_set(0, 0);
+            servo_set(yuhong_servo, 0);
             // update state
             servo_state = DEGREE_0;
             last_servo_state = DEGREE_90;
@@ -617,13 +609,13 @@ int main( void ) {
     //     NULL);
 
 
-    // xTaskCreate(
-    //     vServoTask, 
-    //     "Servo", 
-    //     configMINIMAL_STACK_SIZE, 
-    //     NULL, 
-    //     tskIDLE_PRIORITY + 1, 
-    //     NULL);
+    xTaskCreate(
+        vServoTask, 
+        "Servo", 
+        configMINIMAL_STACK_SIZE, 
+        NULL, 
+        tskIDLE_PRIORITY + 1, 
+        NULL);
 
     vTaskStartScheduler();
     

@@ -41,5 +41,6 @@
 
 #define PWM_TIMER         3
 #define PWM_TIMER_CHANNEL 1
+#define MOTOR_INIT_ALT    0x02 // ALT2
 
 #endif  // _GPIO_PIN_YUHONG_H_

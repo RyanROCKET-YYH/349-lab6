@@ -185,10 +185,10 @@ void EXTI9_5_IRQHandler(void) {
         exti_clear_pending_bit(6);
     }
 
-    // if (exti->pr & EXTI_PR7) { 
-    //     // exti_flag = 1;
-    //     exti_clear_pending_bit(7);
-    // }
+    if (exti->pr & EXTI_PR7) { 
+        // exti_flag = 1;
+        exti_clear_pending_bit(7);
+    }
 
     // For YUHONG's encoder
     if (exti->pr & (EXTI_PR8 | EXTI_PR9)) {

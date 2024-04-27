@@ -4,11 +4,6 @@
 #include <unistd.h>
 #include <gpio.h>
 
-// #define FREE 0
-// #define FORWARD 1
-// #define BACKWARD 2
-// #define STOP 3
-
 /** @brief encoder's states */
 typedef enum {
     FREE,

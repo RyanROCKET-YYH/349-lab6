@@ -221,6 +221,14 @@ void escapeSequenceTask(void *pvParameters) {
 
 /** @brief  flag: if motor is running*/
 volatile int motorRunning = 0;
+
+/** @brief target positions for each button actuation */
+const uint32_t target_positions[3] = {100, 500, 900};
+
+// Global current target position index and flag to signal PID task
+volatile uint32_t current_target_index = 0;
+volatile bool target_position_updated = false;
+
 /**
  * @brief  handle external interrupt task
  *
@@ -237,14 +245,11 @@ void vExtiTask(void* pvParameters) {
     enable_exti(BUTTON1_PORT, BUTTON1_PIN, RISING_FALLING_EDGE);
     enable_exti(BUTTON2_PORT, BUTTON2_PIN, RISING_FALLING_EDGE);
     while (1) {
-
         // BACKWARD
         if(exti_flag_backward){
             exti_flag_backward = 0; // Clear the interrupt flag
-
             // Toggle motor state
             motorRunning = !motorRunning;
-
             if (motorRunning) {
                 motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 20, BACKWARD); // backward
                 vTaskDelay(pdMS_TO_TICKS(200));
@@ -253,14 +258,11 @@ void vExtiTask(void* pvParameters) {
                 motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
             }
         }
-
         // FORWARD
         if (exti_flag_forward) {
             exti_flag_forward = 0; // Clear the interrupt flag
-
             // Toggle motor state
             motorRunning = !motorRunning;
-
             if (motorRunning) {
                 motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 20, FORWARD); // forward
                 vTaskDelay(pdMS_TO_TICKS(200));
@@ -324,22 +326,14 @@ void lcd_clear_quick() {
  * @brief PID controller task
  *
 */
-void vPIDTask(void* pvParameters) {
+void vPIDInputTask(void* pvParameters) {
     (void)pvParameters;
     char* pids[] = {"P", "I", "D"};
     float* pid_val[] = {(float*)&pidParams.P, (float*)&pidParams.I, (float*)&pidParams.D};
     char input[16];
     int index = 0;
 
-    // PID control variables
-    int32_t error = 0;
-    int32_t previous_error = 0;
-    float integral = 0.0f;
-    uint32_t target_position = 512; // 180 degree of the motor
-
     lcd_driver_init();
-    uint32_t enc_read = 0;
-    // uint32_t last_enc_read = 0;
    
     for (;;) {
         for (int i = 0; i < 3; i++) {
@@ -386,28 +380,48 @@ void vPIDTask(void* pvParameters) {
         lcd_print(summary1);
         lcd_set_cursor(1,0);
         lcd_print(summary2);
+        vTaskDelay(pdMS_TO_TICKS(2000));
+    }
+}
 
-        // PID Control Logic //TODO: haven't test it
-        enc_read = encoder_read();
-        error = target_position - enc_read;
 
-        // takes the shortest path back to the target set-point
-        if (error > 512){
-            error -= 1024;
-        }
-        else if (error < -512){
-            error += 1024;
-        }
 
-        integral += error; // Update integral
-        float derivative = error - previous_error; // calculate derivative
-        float output = pidParams.P * error + pidParams.I * integral + pidParams.D * derivative; // PID output
-        previous_error = error; // Update previous error
+/** @brief calculate the shortest path */
+int32_t findBestpath(uint32_t current_position, uint32_t target_position) {
+    int32_t forward_path = (target_position - current_position + TICKS_PER_REV) % TICKS_PER_REV;
+    int32_t backward_path = (current_position - target_position + TICKS_PER_REV) % TICKS_PER_REV;
+    return (forward_path <= backward_path) ? forward_path : -backward_path;
+}
 
-        // motor speed and direction
-        int motor_speed = (int)abs((int)output);
-        MotorDirection direction = output > 0 ? FORWARD : BACKWARD;
+/** @brief PID control logic with input */
+void vPIDControlTask(void* pvParameters) {
+    (void)pvParameters;
 
+    uint32_t target_position = target_positions[0]; // Starting target
+    uint32_t current_position;
+    int32_t path_error;
+    float integral = 0.0f; //integrated error
+    float previous_error = 0.0f;
+    float derivative;
+    int output;
+
+    for (;;) {
+        current_position = motor_position();
+        path_error = findBestpath(current_position, target_position);
+
+        //proportional term
+        float pTerm = pidParams.P * path_error;
+        //integral term
+        integral += pidParams.I * path_error * (0.01);
+        //Derivative term
+        derivative = pidParams.D * (path_error - previous_error) / (0.01);
+        previous_error = path_error;
+        output = pTerm + integral + derivative;
+
+        // Convert the control signal to a duty cycle and direction for the motor
+        MotorDirection direction = (output >= 0) ? FORWARD : BACKWARD;
+        uint32_t motor_speed = (uint32_t)abs(output);
+        
         // motor speed limit
         if (motor_speed > MAX_MOTOR_SPEED){
             motor_speed = MAX_MOTOR_SPEED;
@@ -415,59 +429,13 @@ void vPIDTask(void* pvParameters) {
         else if (motor_speed < MIN_MOTOR_SPEED){
             motor_speed = MIN_MOTOR_SPEED;
         }
-
-        // Set motor speed and direction (Assuming motor_set_dir parameters)
+        printf("Motor_Speed = %lu", motor_speed);
+        // Set the motor speed and direction
         motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, motor_speed, direction);
-        vTaskDelay(pdMS_TO_TICKS(50)); // Update rate
-        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
-
         vTaskDelay(pdMS_TO_TICKS(3000)); // Update rate
     }
-
 }
 
-/**
- * @brief Motor control task
- *
-*/
-void vMotorTask(void* pvParameters){
-    (void)pvParameters;
-    // Initialize the motor
-    // motor_init(gpio_port port_a, gpio_port port_b, gpio_port port_pwm, uint32_t channel_a, uint32_t channel_b, uint32_t channel_pwm, uint32_t timer, uint32_t timer_channel, uint32_t alt_timer)
-    motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, MOTOR_INIT_ALT);
-    motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 100, BACKWARD);
-    vTaskDelay(pdMS_TO_TICKS(2000));
-
-    while (1) {
-        // move forward
-        printf("Motor moving FORWARD\n");
-        // void motor_set_dir(gpio_port port_a, gpio_port port_b, uint32_t channel_a, uint32_t channel_b, uint32_t timer, uint32_t timer_channel, uint32_t duty_cycle, MotorDirection direction)
-        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 60, FORWARD);
-        vTaskDelay(pdMS_TO_TICKS(2000));
-
-        // move backward
-        printf("Motor moving BACKWARD\n");
-        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 30, BACKWARD);
-        vTaskDelay(pdMS_TO_TICKS(2000));
-        
-
-        // Stop the motor
-        printf("Motor STOPPED\n");
-        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
-        vTaskDelay(pdMS_TO_TICKS(2000));
-
-        // Free the motor
-        printf("Motor is FREE\n");
-        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, FREE);
-        vTaskDelay(pdMS_TO_TICKS(2000));
-        
-
-        // Print motor position
-        // uint32_t pos = motor_position();
-        // printf("Current Motor Position: %lu\n", pos);
-        vTaskDelay(pdMS_TO_TICKS(100));
-    }
-}
 
 /** @brief servo's states */
 #define DEGREE_0 0
@@ -564,12 +532,20 @@ int main( void ) {
         NULL); 
         
     xTaskCreate(
-        vPIDTask,
-        "PIDTask",
+        vPIDInputTask,
+        "PIDInputTask",
         configMINIMAL_STACK_SIZE,
         NULL,
         tskIDLE_PRIORITY + 1,
         NULL);
+
+    // xTaskCreate(
+    //     vPIDControlTask,
+    //     "PIDControlTask",
+    //     configMINIMAL_STACK_SIZE,
+    //     NULL,
+    //     tskIDLE_PRIORITY + 1,
+    //     NULL);
     
     xTaskCreate(
         escapeSequenceTask, 

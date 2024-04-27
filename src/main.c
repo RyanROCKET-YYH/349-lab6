@@ -111,8 +111,12 @@ static void vUARTEchoTask(void *pvParameters) {
 }
 
 /** @brief target positions for each button actuation */
-const uint32_t target_positions[3] = {100, 500, 900};
-volatile uint32_t target_position = 100; // Initial target position
+// const uint32_t target_positions[6] = {100, 300, 500, 700, 900, 1200};
+volatile uint32_t target_position = 50; // Initial target position
+
+/** @brief marcos for motor positions and control */
+#define MIN_POS 0
+#define MAX_POS 1200
 
 /**
  * @brief  handle external interrupt task
@@ -125,38 +129,25 @@ void vExtiTask(void* pvParameters) {
     gpio_init(BUTTON2_PORT, BUTTON2_PIN, MODE_INPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_PULL_UP, ALT0);
     // motor init
     motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, MOTOR_INIT_ALT);
-    
     // enable exti
     enable_exti(BUTTON1_PORT, BUTTON1_PIN, RISING_EDGE);
     enable_exti(BUTTON2_PORT, BUTTON2_PIN, RISING_EDGE);
-
-    uint32_t current_index = 0;   // index for the target position
 
     while (1) {
         // BACKWARD
         if(exti_flag_backward){
             exti_flag_backward = 0; // Clear the interrupt flag
-            // Decrement index safely
-            if (current_index == 0) {   // hardcode the index decreasement
-                current_index = 2;
-            } else {
-                current_index--;
-            }
-            target_position = target_positions[current_index];
+            // Decrement 200 encoder position safely
+            target_position = (target_position - 200 + MAX_POS) % (MAX_POS);
             printf("Target_position = %ld\n", target_position);
         }
         // FORWARD
         if (exti_flag_forward) {
             exti_flag_forward = 0; // Clear the interrupt flag
-            if (current_index == 2) {   // hardcode the index increasment
-                current_index = 0;
-            } else {
-                current_index++;
-            }
-            target_position = target_positions[current_index];
+            target_position = (target_position + 200) % (MAX_POS);
             printf("Target_position = %ld\n", target_position);
         }
-        vTaskDelay(pdMS_TO_TICKS(100)); // Delay to debounce the button
+        vTaskDelay(pdMS_TO_TICKS(250)); // Delay to debounce the button
     }
 }
 
@@ -186,7 +177,7 @@ typedef struct {
 } PIDParameters;
 
 /** @brief init PID parameters */
-volatile PIDParameters pidParams = {1.01f, 0.18f, 0.09f, 0.0f, 0.0f, NULL};
+volatile PIDParameters pidParams = {2.81f, 0.38f, 0.09f, 0.0f, 0.0f, NULL};
 
 /** @brief pid update function with simple algorithm */
 float UpdatePID(PIDParameters *pid, int error, float deltaTime) {
@@ -209,6 +200,12 @@ float UpdatePID(PIDParameters *pid, int error, float deltaTime) {
 /** @brief helper function of floating point abs val */
 float absoluteValue(float x) {
     return (x < 0) ? -x : x;
+}
+
+int32_t findBestPath(uint32_t current_pos, uint32_t target_pos) {
+    int32_t forward_path = (target_pos - current_pos + TICKS_PER_REV) % TICKS_PER_REV;
+    int32_t backward_path = (current_pos - target_pos + TICKS_PER_REV) % TICKS_PER_REV;
+    return (forward_path <= backward_path) ? forward_path : -backward_path;
 }
 
 /**
@@ -286,9 +283,9 @@ void motorControlTask(void* pvParameters) {
     (void)pvParameters;
     while (1) {
         uint32_t curr_pos = encoder_read();
-        int32_t error = target_position - curr_pos;
+        int32_t error = findBestPath(curr_pos, target_position);
         float pid_output = UpdatePID((PIDParameters *)&pidParams, error, 0.01f);   // delta time is 1ms
-        printf("pid_out = %f\n", pid_output);
+        // printf("pid_out = %f\n", pid_output);
         MotorDirection direction = pid_output >= 0 ? FORWARD : BACKWARD;
         uint32_t motor_speed = absoluteValue(pid_output);
 
@@ -303,13 +300,6 @@ void motorControlTask(void* pvParameters) {
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
-
-// /** @brief calculate the shortest path */
-// int32_t findBestpath(uint32_t current_position, uint32_t target_position) {
-//     int32_t forward_path = (target_position - current_position + TICKS_PER_REV) % TICKS_PER_REV;
-//     int32_t backward_path = (current_position - target_position + TICKS_PER_REV) % TICKS_PER_REV;
-//     return (forward_path <= backward_path) ? forward_path : -backward_path;
-// }
 
 /**
  * @brief  handle servo task

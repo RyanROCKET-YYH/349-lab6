@@ -170,7 +170,7 @@ void vEncoderMonitorTask(void* pvParameters) {
     while(1) {
         motor_pos = encoder_read();
         printf("Motor_position = %ld\n", motor_pos);
-        vTaskDelay(pdMS_TO_TICKS(200));
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
@@ -186,7 +186,7 @@ typedef struct {
 } PIDParameters;
 
 /** @brief init PID parameters */
-volatile PIDParameters pidParams = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, NULL};
+volatile PIDParameters pidParams = {1.01f, 0.18f, 0.09f, 0.0f, 0.0f, NULL};
 
 /** @brief pid update function with simple algorithm */
 float UpdatePID(PIDParameters *pid, int error, float deltaTime) {
@@ -219,7 +219,7 @@ void vPIDInputTask(void* pvParameters) {
     (void)pvParameters;
     char* pids[] = {"P", "I", "D"};
     // float* pid_val[] = {(float*)&pidParams.P, (float*)&pidParams.I, (float*)&pidParams.D};
-    float new_val[3] = {0.0, 0.0, 0.0};
+    float new_val[3] = {pidParams.P, pidParams.I, pidParams.D};
     char input[16];
     int index = 0;
 

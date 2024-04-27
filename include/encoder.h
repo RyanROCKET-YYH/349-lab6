@@ -5,7 +5,6 @@
 #include <gpio.h>
 
 #define TICKS_PER_REV 1200
-#define MAX_POS 255
 
 extern volatile uint32_t enc_pos;
 extern volatile uint32_t last_state;

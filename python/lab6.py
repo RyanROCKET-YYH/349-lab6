@@ -60,17 +60,4 @@ fig, ax = plt.subplots()
 ani = FuncAnimation(fig, animate, interval=10)
 plt.tight_layout()
 plt.show()
-
-def main():
-    # Log activity to a file
-    with open('./lab6log.txt', 'w') as log:
-        # Set up plot to call animate() function periodically
-        fig, ax = plt.subplots()
-        ani = FuncAnimation(fig, animate, fargs=(log,), interval=10)
-        plt.tight_layout()
-        plt.show()
-
-    ser.close()
-
-if __name__ == '__main__':
-    main()
+ser.close()

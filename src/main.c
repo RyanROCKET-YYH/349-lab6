@@ -424,13 +424,13 @@ int main( void ) {
         tskIDLE_PRIORITY + 1, 
         NULL);
 
-    // xTaskCreate(
-    //     vServoTask, 
-    //     "Servo", 
-    //     configMINIMAL_STACK_SIZE, 
-    //     NULL, 
-    //     tskIDLE_PRIORITY + 1, 
-    //     NULL);
+    xTaskCreate(
+        vServoTask, 
+        "Servo", 
+        configMINIMAL_STACK_SIZE, 
+        NULL, 
+        tskIDLE_PRIORITY + 1, 
+        NULL);
 
     vTaskStartScheduler();
     

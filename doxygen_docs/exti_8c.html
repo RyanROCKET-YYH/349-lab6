@@ -88,8 +88,10 @@ $(function() {
   <div class="headertitle"><div class="title">exti.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>EXTI (EXTernal Interrupts and events)  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;exti.h&gt;</code><br />
-<code>#include &lt;gpio.h&gt;</code><br />
 <code>#include &lt;rcc.h&gt;</code><br />
 <code>#include &lt;nvic.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
@@ -109,71 +111,119 @@ Data Structures</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:addf5ec070e9499d36b7f2009ce736076" id="r_addf5ec070e9499d36b7f2009ce736076"><td class="memItemLeft" align="right" valign="top"><a id="addf5ec070e9499d36b7f2009ce736076" name="addf5ec070e9499d36b7f2009ce736076"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>UNUSED</b>&#160;&#160;&#160;__attribute__((unused))</td></tr>
+<tr class="memdesc:addf5ec070e9499d36b7f2009ce736076"><td class="mdescLeft">&#160;</td><td class="mdescRight">define unused <br /></td></tr>
 <tr class="separator:addf5ec070e9499d36b7f2009ce736076"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecaa9dc940c4aa53c5821f7dc9f64941" id="r_aecaa9dc940c4aa53c5821f7dc9f64941"><td class="memItemLeft" align="right" valign="top"><a id="aecaa9dc940c4aa53c5821f7dc9f64941" name="aecaa9dc940c4aa53c5821f7dc9f64941"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>RCC_SYSCFGEN</b>&#160;&#160;&#160;(1 &lt;&lt; 14)</td></tr>
-<tr class="separator:aecaa9dc940c4aa53c5821f7dc9f64941"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62246020bf3b34b6a4d8d0e84ec79d3d" id="r_a62246020bf3b34b6a4d8d0e84ec79d3d"><td class="memItemLeft" align="right" valign="top"><a id="a62246020bf3b34b6a4d8d0e84ec79d3d" name="a62246020bf3b34b6a4d8d0e84ec79d3d"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>SYSCFG_BASE</b>&#160;&#160;&#160;(struct <a class="el" href="structsyscfg__reg__map.html">syscfg_reg_map</a> *) 0x40013800</td></tr>
+<tr class="memdesc:a62246020bf3b34b6a4d8d0e84ec79d3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">define SYSCFG_BASE <br /></td></tr>
 <tr class="separator:a62246020bf3b34b6a4d8d0e84ec79d3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87371508b3bcdcd98cd1ec629be29061" id="r_a87371508b3bcdcd98cd1ec629be29061"><td class="memItemLeft" align="right" valign="top"><a id="a87371508b3bcdcd98cd1ec629be29061" name="a87371508b3bcdcd98cd1ec629be29061"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI_BASE</b>&#160;&#160;&#160;(struct <a class="el" href="structexti__reg__map.html">exti_reg_map</a> *)   0x40013C00</td></tr>
+<tr class="memdesc:a87371508b3bcdcd98cd1ec629be29061"><td class="mdescLeft">&#160;</td><td class="mdescRight">define EXTI_BASE <br /></td></tr>
 <tr class="separator:a87371508b3bcdcd98cd1ec629be29061"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecaa9dc940c4aa53c5821f7dc9f64941" id="r_aecaa9dc940c4aa53c5821f7dc9f64941"><td class="memItemLeft" align="right" valign="top"><a id="aecaa9dc940c4aa53c5821f7dc9f64941" name="aecaa9dc940c4aa53c5821f7dc9f64941"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>RCC_SYSCFGEN</b>&#160;&#160;&#160;(1 &lt;&lt; 14)</td></tr>
+<tr class="memdesc:aecaa9dc940c4aa53c5821f7dc9f64941"><td class="mdescLeft">&#160;</td><td class="mdescRight">define RCC_SYSCFGEN <br /></td></tr>
+<tr class="separator:aecaa9dc940c4aa53c5821f7dc9f64941"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af05b74a13105cb98ecdf6ac2d1d94544" id="r_af05b74a13105cb98ecdf6ac2d1d94544"><td class="memItemLeft" align="right" valign="top"><a id="af05b74a13105cb98ecdf6ac2d1d94544" name="af05b74a13105cb98ecdf6ac2d1d94544"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI_PR0</b>&#160;&#160;&#160;(1)</td></tr>
+<tr class="memdesc:af05b74a13105cb98ecdf6ac2d1d94544"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI_PR0. <br /></td></tr>
+<tr class="separator:af05b74a13105cb98ecdf6ac2d1d94544"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa7e686fe9517116a422da289e4d55a0" id="r_afa7e686fe9517116a422da289e4d55a0"><td class="memItemLeft" align="right" valign="top"><a id="afa7e686fe9517116a422da289e4d55a0" name="afa7e686fe9517116a422da289e4d55a0"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI_PR4</b>&#160;&#160;&#160;(1 &lt;&lt; 4)</td></tr>
+<tr class="memdesc:afa7e686fe9517116a422da289e4d55a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI_PR4. <br /></td></tr>
+<tr class="separator:afa7e686fe9517116a422da289e4d55a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add1c9033046d1a66edbdf8cc03e46339" id="r_add1c9033046d1a66edbdf8cc03e46339"><td class="memItemLeft" align="right" valign="top"><a id="add1c9033046d1a66edbdf8cc03e46339" name="add1c9033046d1a66edbdf8cc03e46339"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI_PR5</b>&#160;&#160;&#160;(1 &lt;&lt; 5)</td></tr>
+<tr class="memdesc:add1c9033046d1a66edbdf8cc03e46339"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI_PR5. <br /></td></tr>
+<tr class="separator:add1c9033046d1a66edbdf8cc03e46339"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab29504f3751af9eab34aa79945ffd206" id="r_ab29504f3751af9eab34aa79945ffd206"><td class="memItemLeft" align="right" valign="top"><a id="ab29504f3751af9eab34aa79945ffd206" name="ab29504f3751af9eab34aa79945ffd206"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI_PR6</b>&#160;&#160;&#160;(1 &lt;&lt; 6)</td></tr>
+<tr class="memdesc:ab29504f3751af9eab34aa79945ffd206"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI_PR6. <br /></td></tr>
+<tr class="separator:ab29504f3751af9eab34aa79945ffd206"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace4da163dded8d59da987d20efe02f05" id="r_ace4da163dded8d59da987d20efe02f05"><td class="memItemLeft" align="right" valign="top"><a id="ace4da163dded8d59da987d20efe02f05" name="ace4da163dded8d59da987d20efe02f05"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI_PR7</b>&#160;&#160;&#160;(1 &lt;&lt; 7)</td></tr>
+<tr class="memdesc:ace4da163dded8d59da987d20efe02f05"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI_PR7. <br /></td></tr>
 <tr class="separator:ace4da163dded8d59da987d20efe02f05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a184788dd9058bff7cacaed5cc5b13b7e" id="r_a184788dd9058bff7cacaed5cc5b13b7e"><td class="memItemLeft" align="right" valign="top"><a id="a184788dd9058bff7cacaed5cc5b13b7e" name="a184788dd9058bff7cacaed5cc5b13b7e"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI_PR8</b>&#160;&#160;&#160;(1 &lt;&lt; 8)</td></tr>
+<tr class="memdesc:a184788dd9058bff7cacaed5cc5b13b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI_PR8. <br /></td></tr>
 <tr class="separator:a184788dd9058bff7cacaed5cc5b13b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd52ed11510c38b3131354e222f6f553" id="r_afd52ed11510c38b3131354e222f6f553"><td class="memItemLeft" align="right" valign="top"><a id="afd52ed11510c38b3131354e222f6f553" name="afd52ed11510c38b3131354e222f6f553"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI_PR9</b>&#160;&#160;&#160;(1 &lt;&lt; 9)</td></tr>
+<tr class="memdesc:afd52ed11510c38b3131354e222f6f553"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI_PR9. <br /></td></tr>
 <tr class="separator:afd52ed11510c38b3131354e222f6f553"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afca6bb9b3b827886785724a71f3fe17d" id="r_afca6bb9b3b827886785724a71f3fe17d"><td class="memItemLeft" align="right" valign="top"><a id="afca6bb9b3b827886785724a71f3fe17d" name="afca6bb9b3b827886785724a71f3fe17d"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI0_INT_NUM</b>&#160;&#160;&#160;(6)</td></tr>
+<tr class="memdesc:afca6bb9b3b827886785724a71f3fe17d"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI0_INT_NUM. <br /></td></tr>
 <tr class="separator:afca6bb9b3b827886785724a71f3fe17d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef9fadba7bffbe7e10a915ca04590345" id="r_aef9fadba7bffbe7e10a915ca04590345"><td class="memItemLeft" align="right" valign="top"><a id="aef9fadba7bffbe7e10a915ca04590345" name="aef9fadba7bffbe7e10a915ca04590345"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI1_INT_NUM</b>&#160;&#160;&#160;(7)</td></tr>
+<tr class="memdesc:aef9fadba7bffbe7e10a915ca04590345"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI1_INT_NUM. <br /></td></tr>
 <tr class="separator:aef9fadba7bffbe7e10a915ca04590345"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a735f0a71ca514f9b95f8e5728db51f79" id="r_a735f0a71ca514f9b95f8e5728db51f79"><td class="memItemLeft" align="right" valign="top"><a id="a735f0a71ca514f9b95f8e5728db51f79" name="a735f0a71ca514f9b95f8e5728db51f79"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI2_INT_NUM</b>&#160;&#160;&#160;(8)</td></tr>
+<tr class="memdesc:a735f0a71ca514f9b95f8e5728db51f79"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI2_INT_NUM. <br /></td></tr>
 <tr class="separator:a735f0a71ca514f9b95f8e5728db51f79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc942d81fb00ce11f7f9c13c31787034" id="r_acc942d81fb00ce11f7f9c13c31787034"><td class="memItemLeft" align="right" valign="top"><a id="acc942d81fb00ce11f7f9c13c31787034" name="acc942d81fb00ce11f7f9c13c31787034"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI3_INT_NUM</b>&#160;&#160;&#160;(9)</td></tr>
+<tr class="memdesc:acc942d81fb00ce11f7f9c13c31787034"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI3_INT_NUM. <br /></td></tr>
 <tr class="separator:acc942d81fb00ce11f7f9c13c31787034"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac318188360edeac2bad65e4aab7bc3f6" id="r_ac318188360edeac2bad65e4aab7bc3f6"><td class="memItemLeft" align="right" valign="top"><a id="ac318188360edeac2bad65e4aab7bc3f6" name="ac318188360edeac2bad65e4aab7bc3f6"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI4_INT_NUM</b>&#160;&#160;&#160;(10)</td></tr>
+<tr class="memdesc:ac318188360edeac2bad65e4aab7bc3f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI4_INT_NUM. <br /></td></tr>
 <tr class="separator:ac318188360edeac2bad65e4aab7bc3f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2975b1686461a009b8a192955c7245f2" id="r_a2975b1686461a009b8a192955c7245f2"><td class="memItemLeft" align="right" valign="top"><a id="a2975b1686461a009b8a192955c7245f2" name="a2975b1686461a009b8a192955c7245f2"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI9_5_INT_NUM</b>&#160;&#160;&#160;(23)</td></tr>
+<tr class="memdesc:a2975b1686461a009b8a192955c7245f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI9_5_INT_NUM. <br /></td></tr>
 <tr class="separator:a2975b1686461a009b8a192955c7245f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42afb1261c45df1e3abee3a691fb4e14" id="r_a42afb1261c45df1e3abee3a691fb4e14"><td class="memItemLeft" align="right" valign="top"><a id="a42afb1261c45df1e3abee3a691fb4e14" name="a42afb1261c45df1e3abee3a691fb4e14"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI15_10_INT_NUM</b>&#160;&#160;&#160;(40)</td></tr>
+<tr class="memdesc:a42afb1261c45df1e3abee3a691fb4e14"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI15_10_INT_NUM. <br /></td></tr>
 <tr class="separator:a42afb1261c45df1e3abee3a691fb4e14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a50edd7f9eb8281e108c7707a02c0c82f" id="r_a50edd7f9eb8281e108c7707a02c0c82f"><td class="memItemLeft" align="right" valign="top"><a id="a50edd7f9eb8281e108c7707a02c0c82f" name="a50edd7f9eb8281e108c7707a02c0c82f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>enable_exti</b> (<a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> gpio_port port, <a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> uint32_t channel, <a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> uint32_t edge)</td></tr>
+<tr class="memdesc:a50edd7f9eb8281e108c7707a02c0c82f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables external interrupts on a given GPIO port and channel, triggered by a condition specified by edge. edge - RISING_EDGE, FALLING_EDGE, RISING_FALLING_EDGE(for button) <br /></td></tr>
 <tr class="separator:a50edd7f9eb8281e108c7707a02c0c82f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7803706adc7090933d10a76a08215f6b" id="r_a7803706adc7090933d10a76a08215f6b"><td class="memItemLeft" align="right" valign="top"><a id="a7803706adc7090933d10a76a08215f6b" name="a7803706adc7090933d10a76a08215f6b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>disable_exti</b> (<a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> uint32_t channel)</td></tr>
+<tr class="memdesc:a7803706adc7090933d10a76a08215f6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disables external interrupts on a given channel. <br /></td></tr>
 <tr class="separator:a7803706adc7090933d10a76a08215f6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acea4db3d11ae605bfd39150915121db5" id="r_acea4db3d11ae605bfd39150915121db5"><td class="memItemLeft" align="right" valign="top"><a id="acea4db3d11ae605bfd39150915121db5" name="acea4db3d11ae605bfd39150915121db5"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>exti_clear_pending_bit</b> (<a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> uint32_t channel)</td></tr>
+<tr class="memdesc:acea4db3d11ae605bfd39150915121db5"><td class="mdescLeft">&#160;</td><td class="mdescRight">exti clear pending bit <br /></td></tr>
 <tr class="separator:acea4db3d11ae605bfd39150915121db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b2096b8b2643286dc3a7e5110e5ae85" id="r_a7b2096b8b2643286dc3a7e5110e5ae85"><td class="memItemLeft" align="right" valign="top"><a id="a7b2096b8b2643286dc3a7e5110e5ae85" name="a7b2096b8b2643286dc3a7e5110e5ae85"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI9_5_IRQHandler</b> (void)</td></tr>
+<tr class="memdesc:a7b2096b8b2643286dc3a7e5110e5ae85"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI9_5 Interrupt Handler: used in boot.S. <br /></td></tr>
 <tr class="separator:a7b2096b8b2643286dc3a7e5110e5ae85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17e9789a29a87d2df54f12b94dd1a0b6" id="r_a17e9789a29a87d2df54f12b94dd1a0b6"><td class="memItemLeft" align="right" valign="top"><a id="a17e9789a29a87d2df54f12b94dd1a0b6" name="a17e9789a29a87d2df54f12b94dd1a0b6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI0_IRQHandler</b> (void)</td></tr>
+<tr class="memdesc:a17e9789a29a87d2df54f12b94dd1a0b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI0 Interrupt Handler: used in boot.S FOR YIYING's forward button. <br /></td></tr>
+<tr class="separator:a17e9789a29a87d2df54f12b94dd1a0b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a290cb997018c8d85d4b965b4a242842f" id="r_a290cb997018c8d85d4b965b4a242842f"><td class="memItemLeft" align="right" valign="top"><a id="a290cb997018c8d85d4b965b4a242842f" name="a290cb997018c8d85d4b965b4a242842f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>EXTI4_IRQHandler</b> (void)</td></tr>
+<tr class="memdesc:a290cb997018c8d85d4b965b4a242842f"><td class="mdescLeft">&#160;</td><td class="mdescRight">EXTI4 Interrupt Handler: used in boot.S FOR YIYING's backward button. <br /></td></tr>
+<tr class="separator:a290cb997018c8d85d4b965b4a242842f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a04ab9ca7b23d59e24944bda9280a9a72" id="r_a04ab9ca7b23d59e24944bda9280a9a72"><td class="memItemLeft" align="right" valign="top"><a id="a04ab9ca7b23d59e24944bda9280a9a72" name="a04ab9ca7b23d59e24944bda9280a9a72"></a>
-volatile uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>exti_flag</b> = 0</td></tr>
-<tr class="separator:a04ab9ca7b23d59e24944bda9280a9a72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abccf513450180553b227ade7156fdc37" id="r_abccf513450180553b227ade7156fdc37"><td class="memItemLeft" align="right" valign="top"><a id="abccf513450180553b227ade7156fdc37" name="abccf513450180553b227ade7156fdc37"></a>
+volatile uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>exti_flag_forward</b> = 0</td></tr>
+<tr class="memdesc:abccf513450180553b227ade7156fdc37"><td class="mdescLeft">&#160;</td><td class="mdescRight">define exti flag for motor moving forward <br /></td></tr>
+<tr class="separator:abccf513450180553b227ade7156fdc37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a172bab3e444d4ed2defd5ae895a26e69" id="r_a172bab3e444d4ed2defd5ae895a26e69"><td class="memItemLeft" align="right" valign="top"><a id="a172bab3e444d4ed2defd5ae895a26e69" name="a172bab3e444d4ed2defd5ae895a26e69"></a>
+volatile uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>exti_flag_backward</b> = 0</td></tr>
+<tr class="memdesc:a172bab3e444d4ed2defd5ae895a26e69"><td class="mdescLeft">&#160;</td><td class="mdescRight">define exti flag for motor moving backward <br /></td></tr>
+<tr class="separator:a172bab3e444d4ed2defd5ae895a26e69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><dl class="section date"><dt>Date</dt><dd></dd></dl>
-<dl class="section author"><dt>Author</dt><dd></dd></dl>
+<div class="textblock"><p>EXTI (EXTernal Interrupts and events) </p>
+<dl class="section date"><dt>Date</dt><dd>04/12/2024</dd></dl>
+<dl class="section author"><dt>Author</dt><dd>Yuhong Yao (yuhongy), Yiying Li (yiyingl4) </dd></dl>
 </div></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.8-->
 <!-- start footer part -->

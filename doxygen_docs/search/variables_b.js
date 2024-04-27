@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['oar1_0',['OAR1',['../structi2c__reg__map.html#a28b80e0ee8622858b4ea46021cfe3da0',1,'i2c_reg_map']]],
-  ['oar2_1',['OAR2',['../structi2c__reg__map.html#a8342e6d3c61031ef990b5de2399102bb',1,'i2c_reg_map']]]
+  ['memrmp_0',['memrmp',['../structsyscfg__reg__map.html#a7b3d6e1dfe0f61374e441aa941a3411e',1,'syscfg_reg_map']]],
+  ['mutex_1',['mutex',['../structPIDParameters.html#a0cedcf30a6977925f181e6209fed7a2c',1,'PIDParameters']]]
 ];

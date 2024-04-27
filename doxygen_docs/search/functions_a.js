@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['vblinkytask_0',['vBlinkyTask',['../main_8c.html#a5b7f2c66e654070603bec75ae8da6e56',1,'main.c']]],
-  ['vencodermonitortask_1',['vEncoderMonitorTask',['../main_8c.html#abd0f25e6c76dae4e30e68b7d1dcf5f5f',1,'main.c']]],
-  ['vextitask_2',['vExtiTask',['../main_8c.html#a695bb8caa1ee957c47e8bb336282f205',1,'main.c']]],
-  ['vhardpwm_3',['vHardPWM',['../main_8c.html#a6540bd4126b2f31653d9ccc56da2217c',1,'main.c']]],
-  ['vpidtask_4',['vPIDTask',['../main_8c.html#ab14b94c11d24a671a5e871dcfd591bfb',1,'main.c']]]
+  ['uart_5fget_5fbyte_0',['uart_get_byte',['../uart_8c.html#a2e47e3c1816fcee4adc0baebaf145fdd',1,'uart.c']]],
+  ['uart_5finit_1',['uart_init',['../uart_8c.html#a4009c0c0c555ef96a57290f8456869c7',1,'uart.c']]],
+  ['uart_5firq_5fhandler_2',['uart_irq_handler',['../uart_8c.html#a3f0c0eeba37ad41ca9517b73fe3fce3b',1,'uart.c']]],
+  ['uart_5fput_5fbyte_3',['uart_put_byte',['../uart_8c.html#a6982c93fbd669e14ac9256eb1337bdd5',1,'uart.c']]],
+  ['uart_5fread_4',['uart_read',['../uart_8c.html#aa8be4ac34afa703fcc4a6ba1d52c189e',1,'uart.c']]],
+  ['uart_5fwrite_5',['uart_write',['../uart_8c.html#ae741216cc34aef3f274e6c4d744d48b2',1,'uart.c']]],
+  ['updatepid_6',['UpdatePID',['../main_8c.html#a047c90d3b388d57447c3e0ebc81cd23e',1,'main.c']]]
 ];

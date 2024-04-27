@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['main_0',['main',['../main_8c.html#a840291bc02cba5474a4cb46a9b9566fe',1,'main.c']]]
+  ['lcd_5fclear_5fquick_0',['lcd_clear_quick',['../main_8c.html#a9fe4388b60f663c4b9163ed23fe03d88',1,'main.c']]]
 ];

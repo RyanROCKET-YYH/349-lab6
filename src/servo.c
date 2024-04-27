@@ -13,6 +13,8 @@
 #include <timer.h>
 #include <nvic.h>
 #include <stdio.h>
+
+/** @brief define gpio pins header file */
 #define YIYING
 #ifdef YUHONG
 #include "gpio_pin_yuhong.h"

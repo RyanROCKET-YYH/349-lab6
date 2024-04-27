@@ -102,15 +102,6 @@ $(function() {
 <code>#include &lt;arm.h&gt;</code><br />
 <code>#include &quot;gpio_pin_yuhong.h&quot;</code><br />
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a2fc5ed1205f3836e66ebd59dbcd8e224" id="r_a2fc5ed1205f3836e66ebd59dbcd8e224"><td class="memItemLeft" align="right" valign="top"><a id="a2fc5ed1205f3836e66ebd59dbcd8e224" name="a2fc5ed1205f3836e66ebd59dbcd8e224"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>YUHONG</b></td></tr>
-<tr class="separator:a2fc5ed1205f3836e66ebd59dbcd8e224"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6bf4c8c52d6e1e3bb2fe68a80f53534a" id="r_a6bf4c8c52d6e1e3bb2fe68a80f53534a"><td class="memItemLeft" align="right" valign="top"><a id="a6bf4c8c52d6e1e3bb2fe68a80f53534a" name="a6bf4c8c52d6e1e3bb2fe68a80f53534a"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>ENCODER_TPR</b>&#160;&#160;&#160;1200</td></tr>
-<tr class="separator:a6bf4c8c52d6e1e3bb2fe68a80f53534a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:a1bd347f0246e89002d228fefd1d7359d" id="r_a1bd347f0246e89002d228fefd1d7359d"><td class="memItemLeft" align="right" valign="top"><a id="a1bd347f0246e89002d228fefd1d7359d" name="a1bd347f0246e89002d228fefd1d7359d"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1bd347f0246e89002d228fefd1d7359d">encoder_state</a> { <b>S00</b> = 0x0
@@ -135,9 +126,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>encoder_stop</b> ()</
 void&#160;</td><td class="memItemRight" valign="bottom"><b>encoder_irq_handler</b> ()</td></tr>
 <tr class="memdesc:a9ab1ff88e74cbb9ae05369be63ef99d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">updating the position based on the state transition observed <br /></td></tr>
 <tr class="separator:a9ab1ff88e74cbb9ae05369be63ef99d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad61f4dc3d997dbddd81901ae853707d1" id="r_ad61f4dc3d997dbddd81901ae853707d1"><td class="memItemLeft" align="right" valign="top"><a id="ad61f4dc3d997dbddd81901ae853707d1" name="ad61f4dc3d997dbddd81901ae853707d1"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>encoder_read</b> ()</td></tr>
-<tr class="memdesc:ad61f4dc3d997dbddd81901ae853707d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current position of the motor. <br /></td></tr>
+<tr class="memitem:ad61f4dc3d997dbddd81901ae853707d1" id="r_ad61f4dc3d997dbddd81901ae853707d1"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad61f4dc3d997dbddd81901ae853707d1">encoder_read</a> ()</td></tr>
+<tr class="memdesc:ad61f4dc3d997dbddd81901ae853707d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current position of the motor.  <br /></td></tr>
 <tr class="separator:ad61f4dc3d997dbddd81901ae853707d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
@@ -155,7 +145,28 @@ volatile uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>last_sta
 <div class="textblock"><p>Motor Controller: the functions of The Encoder Driver. </p>
 <dl class="section date"><dt>Date</dt><dd>04/16/2024</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Yuhong Yao (yuhongy), Yiying Li (yiyingl4) </dd></dl>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="ad61f4dc3d997dbddd81901ae853707d1" name="ad61f4dc3d997dbddd81901ae853707d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad61f4dc3d997dbddd81901ae853707d1">&#9670;&#160;</a></span>encoder_read()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t encoder_read </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the current position of the motor. </p>
+<p>Forward declaration of encoder_read. </p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.8-->
 <!-- start footer part -->
 </div>

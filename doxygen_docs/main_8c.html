@@ -93,11 +93,11 @@ $(function() {
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;FreeRTOS.h&gt;</code><br />
 <code>#include &lt;task.h&gt;</code><br />
+<code>#include &quot;semphr.h&quot;</code><br />
 <code>#include &lt;adc.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;uart.h&gt;</code><br />
-<code>#include &lt;atcmd.h&gt;</code><br />
 <code>#include &lt;gpio.h&gt;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
@@ -110,6 +110,7 @@ $(function() {
 <code>#include &lt;timer.h&gt;</code><br />
 <code>#include &lt;exti.h&gt;</code><br />
 <code>#include &lt;encoder.h&gt;</code><br />
+<code>#include &lt;motor_driver.h&gt;</code><br />
 <code>#include &quot;gpio_pin_yuhong.h&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -118,36 +119,51 @@ Data Structures</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">PID parameters.  <a href="structPIDParameters.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a2fc5ed1205f3836e66ebd59dbcd8e224" id="r_a2fc5ed1205f3836e66ebd59dbcd8e224"><td class="memItemLeft" align="right" valign="top"><a id="a2fc5ed1205f3836e66ebd59dbcd8e224" name="a2fc5ed1205f3836e66ebd59dbcd8e224"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>YUHONG</b></td></tr>
+<tr class="memdesc:a2fc5ed1205f3836e66ebd59dbcd8e224"><td class="mdescLeft">&#160;</td><td class="mdescRight">define gpio pin header file <br /></td></tr>
+<tr class="separator:a2fc5ed1205f3836e66ebd59dbcd8e224"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50047de58c273d39836dd8b2c6d6afbc" id="r_a50047de58c273d39836dd8b2c6d6afbc"><td class="memItemLeft" align="right" valign="top"><a id="a50047de58c273d39836dd8b2c6d6afbc" name="a50047de58c273d39836dd8b2c6d6afbc"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>MAX_MOTOR_SPEED</b>&#160;&#160;&#160;90</td></tr>
+<tr class="memdesc:a50047de58c273d39836dd8b2c6d6afbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">define highest motor speed <br /></td></tr>
+<tr class="separator:a50047de58c273d39836dd8b2c6d6afbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c4fc2b1af1e61e9289b156e460cecff" id="r_a4c4fc2b1af1e61e9289b156e460cecff"><td class="memItemLeft" align="right" valign="top"><a id="a4c4fc2b1af1e61e9289b156e460cecff" name="a4c4fc2b1af1e61e9289b156e460cecff"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>MIN_MOTOR_SPEED</b>&#160;&#160;&#160;10</td></tr>
+<tr class="memdesc:a4c4fc2b1af1e61e9289b156e460cecff"><td class="mdescLeft">&#160;</td><td class="mdescRight">define lowest motor speed <br /></td></tr>
+<tr class="separator:a4c4fc2b1af1e61e9289b156e460cecff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f1a2ae4c99750638facacf005fd3129" id="r_a8f1a2ae4c99750638facacf005fd3129"><td class="memItemLeft" align="right" valign="top"><a id="a8f1a2ae4c99750638facacf005fd3129" name="a8f1a2ae4c99750638facacf005fd3129"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>DEGREE_0</b>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:a8f1a2ae4c99750638facacf005fd3129"><td class="mdescLeft">&#160;</td><td class="mdescRight">servo's states (degree) <br /></td></tr>
+<tr class="separator:a8f1a2ae4c99750638facacf005fd3129"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b4f6a8ee7432d4d2660d6ba47ea0218" id="r_a3b4f6a8ee7432d4d2660d6ba47ea0218"><td class="memItemLeft" align="right" valign="top"><a id="a3b4f6a8ee7432d4d2660d6ba47ea0218" name="a3b4f6a8ee7432d4d2660d6ba47ea0218"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>DEGREE_90</b>&#160;&#160;&#160;1</td></tr>
+<tr class="memdesc:a3b4f6a8ee7432d4d2660d6ba47ea0218"><td class="mdescLeft">&#160;</td><td class="mdescRight">servo's states <br /></td></tr>
+<tr class="separator:a3b4f6a8ee7432d4d2660d6ba47ea0218"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38555a63e775230b0aef54cccaac35d3" id="r_a38555a63e775230b0aef54cccaac35d3"><td class="memItemLeft" align="right" valign="top"><a id="a38555a63e775230b0aef54cccaac35d3" name="a38555a63e775230b0aef54cccaac35d3"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>DEGREE_180</b>&#160;&#160;&#160;2</td></tr>
+<tr class="memdesc:a38555a63e775230b0aef54cccaac35d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">servo's states <br /></td></tr>
+<tr class="separator:a38555a63e775230b0aef54cccaac35d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d95f0c60b043808cdecba029bab9bcf" id="r_a9d95f0c60b043808cdecba029bab9bcf"><td class="memItemLeft" align="right" valign="top"><a id="a9d95f0c60b043808cdecba029bab9bcf" name="a9d95f0c60b043808cdecba029bab9bcf"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>MIN_POS</b>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:a9d95f0c60b043808cdecba029bab9bcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">marcos for motor positions and control <br /></td></tr>
+<tr class="separator:a9d95f0c60b043808cdecba029bab9bcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac430bc6bfe8a32cd49cc3601c868a0b6" id="r_ac430bc6bfe8a32cd49cc3601c868a0b6"><td class="memItemLeft" align="right" valign="top"><a id="ac430bc6bfe8a32cd49cc3601c868a0b6" name="ac430bc6bfe8a32cd49cc3601c868a0b6"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>MAX_POS</b>&#160;&#160;&#160;1200</td></tr>
+<tr class="memdesc:ac430bc6bfe8a32cd49cc3601c868a0b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">marcos for motor positions and control <br /></td></tr>
+<tr class="separator:ac430bc6bfe8a32cd49cc3601c868a0b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a306b635b870db1703cd49f9ffdd6db2a" id="r_a306b635b870db1703cd49f9ffdd6db2a"><td class="memItemLeft" align="right" valign="top"><a id="a306b635b870db1703cd49f9ffdd6db2a" name="a306b635b870db1703cd49f9ffdd6db2a"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>handleResume</b> (void *args, const char *cmdArgs)</td></tr>
-<tr class="memdesc:a306b635b870db1703cd49f9ffdd6db2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">handle the AT+Resume command <br /></td></tr>
-<tr class="separator:a306b635b870db1703cd49f9ffdd6db2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3160fb40dfc3a731401566948f355840" id="r_a3160fb40dfc3a731401566948f355840"><td class="memItemLeft" align="right" valign="top"><a id="a3160fb40dfc3a731401566948f355840" name="a3160fb40dfc3a731401566948f355840"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>handleHello</b> (void *args, const char *cmdArgs)</td></tr>
-<tr class="memdesc:a3160fb40dfc3a731401566948f355840"><td class="mdescLeft">&#160;</td><td class="mdescRight">handle the AT+Hello=&lt;&gt; command <br /></td></tr>
-<tr class="separator:a3160fb40dfc3a731401566948f355840"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab870359dba98f81d09ab9f2d69e03f27" id="r_ab870359dba98f81d09ab9f2d69e03f27"><td class="memItemLeft" align="right" valign="top"><a id="ab870359dba98f81d09ab9f2d69e03f27" name="ab870359dba98f81d09ab9f2d69e03f27"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>handlePasscode</b> (void *args, const char *cmdArgs)</td></tr>
-<tr class="memdesc:ab870359dba98f81d09ab9f2d69e03f27"><td class="mdescLeft">&#160;</td><td class="mdescRight">handle the AT+Passcpde? command <br /></td></tr>
-<tr class="separator:ab870359dba98f81d09ab9f2d69e03f27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbcf18524447268eab1328018e1cd773" id="r_acbcf18524447268eab1328018e1cd773"><td class="memItemLeft" align="right" valign="top"><a id="acbcf18524447268eab1328018e1cd773" name="acbcf18524447268eab1328018e1cd773"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>handlePasscodeChange</b> (void *args, const char *cmdArgs)</td></tr>
-<tr class="memdesc:acbcf18524447268eab1328018e1cd773"><td class="mdescLeft">&#160;</td><td class="mdescRight">handle the AT+Passcpde=&lt;&gt; command <br /></td></tr>
-<tr class="separator:acbcf18524447268eab1328018e1cd773"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49f53aae3b2b375d559af56107043fae" id="r_a49f53aae3b2b375d559af56107043fae"><td class="memItemLeft" align="right" valign="top"><a id="a49f53aae3b2b375d559af56107043fae" name="a49f53aae3b2b375d559af56107043fae"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>handleDutyCycleChange</b> (void *args, const char *cmdArgs)</td></tr>
-<tr class="memdesc:a49f53aae3b2b375d559af56107043fae"><td class="mdescLeft">&#160;</td><td class="mdescRight">handle the duty cycle change <br /></td></tr>
-<tr class="separator:a49f53aae3b2b375d559af56107043fae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fe4388b60f663c4b9163ed23fe03d88" id="r_a9fe4388b60f663c4b9163ed23fe03d88"><td class="memItemLeft" align="right" valign="top"><a id="a9fe4388b60f663c4b9163ed23fe03d88" name="a9fe4388b60f663c4b9163ed23fe03d88"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>lcd_clear_quick</b> ()</td></tr>
+<tr class="memdesc:a9fe4388b60f663c4b9163ed23fe03d88"><td class="mdescLeft">&#160;</td><td class="mdescRight">clear the lcd <br /></td></tr>
+<tr class="separator:a9fe4388b60f663c4b9163ed23fe03d88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b7f2c66e654070603bec75ae8da6e56" id="r_a5b7f2c66e654070603bec75ae8da6e56"><td class="memItemLeft" align="right" valign="top"><a id="a5b7f2c66e654070603bec75ae8da6e56" name="a5b7f2c66e654070603bec75ae8da6e56"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>vBlinkyTask</b> (void *pvParameters)</td></tr>
 <tr class="memdesc:a5b7f2c66e654070603bec75ae8da6e56"><td class="mdescLeft">&#160;</td><td class="mdescRight">handle the Blinky LED task <br /></td></tr>
 <tr class="separator:a5b7f2c66e654070603bec75ae8da6e56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa691f67601975eb71d5783ec742c5b5a" id="r_aa691f67601975eb71d5783ec742c5b5a"><td class="memItemLeft" align="right" valign="top"><a id="aa691f67601975eb71d5783ec742c5b5a" name="aa691f67601975eb71d5783ec742c5b5a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>escapeSequenceTask</b> (void *pvParameters)</td></tr>
-<tr class="memdesc:aa691f67601975eb71d5783ec742c5b5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">handle +++ command: enter the command mode <br /></td></tr>
-<tr class="separator:aa691f67601975eb71d5783ec742c5b5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a695bb8caa1ee957c47e8bb336282f205" id="r_a695bb8caa1ee957c47e8bb336282f205"><td class="memItemLeft" align="right" valign="top"><a id="a695bb8caa1ee957c47e8bb336282f205" name="a695bb8caa1ee957c47e8bb336282f205"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>vExtiTask</b> (void *pvParameters)</td></tr>
 <tr class="memdesc:a695bb8caa1ee957c47e8bb336282f205"><td class="mdescLeft">&#160;</td><td class="mdescRight">handle external interrupt task <br /></td></tr>
@@ -156,18 +172,30 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>vExtiTask</b> (void *
 void&#160;</td><td class="memItemRight" valign="bottom"><b>vEncoderMonitorTask</b> (void *pvParameters)</td></tr>
 <tr class="memdesc:abd0f25e6c76dae4e30e68b7d1dcf5f5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">handle encoder task <br /></td></tr>
 <tr class="separator:abd0f25e6c76dae4e30e68b7d1dcf5f5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6540bd4126b2f31653d9ccc56da2217c" id="r_a6540bd4126b2f31653d9ccc56da2217c"><td class="memItemLeft" align="right" valign="top"><a id="a6540bd4126b2f31653d9ccc56da2217c" name="a6540bd4126b2f31653d9ccc56da2217c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>vHardPWM</b> (void *pvParameters)</td></tr>
-<tr class="memdesc:a6540bd4126b2f31653d9ccc56da2217c"><td class="mdescLeft">&#160;</td><td class="mdescRight">handle Hardware-driven PWM task <br /></td></tr>
-<tr class="separator:a6540bd4126b2f31653d9ccc56da2217c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9fe4388b60f663c4b9163ed23fe03d88" id="r_a9fe4388b60f663c4b9163ed23fe03d88"><td class="memItemLeft" align="right" valign="top"><a id="a9fe4388b60f663c4b9163ed23fe03d88" name="a9fe4388b60f663c4b9163ed23fe03d88"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>lcd_clear_quick</b> ()</td></tr>
-<tr class="memdesc:a9fe4388b60f663c4b9163ed23fe03d88"><td class="mdescLeft">&#160;</td><td class="mdescRight">clear the lcd <br /></td></tr>
-<tr class="separator:a9fe4388b60f663c4b9163ed23fe03d88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab14b94c11d24a671a5e871dcfd591bfb" id="r_ab14b94c11d24a671a5e871dcfd591bfb"><td class="memItemLeft" align="right" valign="top"><a id="ab14b94c11d24a671a5e871dcfd591bfb" name="ab14b94c11d24a671a5e871dcfd591bfb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>vPIDTask</b> (void *pvParameters)</td></tr>
-<tr class="memdesc:ab14b94c11d24a671a5e871dcfd591bfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">PID controller task. <br /></td></tr>
-<tr class="separator:ab14b94c11d24a671a5e871dcfd591bfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a047c90d3b388d57447c3e0ebc81cd23e" id="r_a047c90d3b388d57447c3e0ebc81cd23e"><td class="memItemLeft" align="right" valign="top"><a id="a047c90d3b388d57447c3e0ebc81cd23e" name="a047c90d3b388d57447c3e0ebc81cd23e"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>UpdatePID</b> (<a class="el" href="structPIDParameters.html">PIDParameters</a> *pid, int error, float deltaTime)</td></tr>
+<tr class="memdesc:a047c90d3b388d57447c3e0ebc81cd23e"><td class="mdescLeft">&#160;</td><td class="mdescRight">pid update function with simple algorithm <br /></td></tr>
+<tr class="separator:a047c90d3b388d57447c3e0ebc81cd23e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ba84fcc395f62c0b3a46b90468cd330" id="r_a6ba84fcc395f62c0b3a46b90468cd330"><td class="memItemLeft" align="right" valign="top"><a id="a6ba84fcc395f62c0b3a46b90468cd330" name="a6ba84fcc395f62c0b3a46b90468cd330"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>absoluteValue</b> (float x)</td></tr>
+<tr class="memdesc:a6ba84fcc395f62c0b3a46b90468cd330"><td class="mdescLeft">&#160;</td><td class="mdescRight">helper function of floating point abs val <br /></td></tr>
+<tr class="separator:a6ba84fcc395f62c0b3a46b90468cd330"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa32e5ddd6c96b6f4afa1f6ebe41a43f" id="r_aaa32e5ddd6c96b6f4afa1f6ebe41a43f"><td class="memItemLeft" align="right" valign="top"><a id="aaa32e5ddd6c96b6f4afa1f6ebe41a43f" name="aaa32e5ddd6c96b6f4afa1f6ebe41a43f"></a>
+int32_t&#160;</td><td class="memItemRight" valign="bottom"><b>findBestPath</b> (uint32_t current_pos, uint32_t target_pos)</td></tr>
+<tr class="memdesc:aaa32e5ddd6c96b6f4afa1f6ebe41a43f"><td class="mdescLeft">&#160;</td><td class="mdescRight">helper function of better path <br /></td></tr>
+<tr class="separator:aaa32e5ddd6c96b6f4afa1f6ebe41a43f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a908d240686af7b2e81adfac9de87e606" id="r_a908d240686af7b2e81adfac9de87e606"><td class="memItemLeft" align="right" valign="top"><a id="a908d240686af7b2e81adfac9de87e606" name="a908d240686af7b2e81adfac9de87e606"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>vPIDInputTask</b> (void *pvParameters)</td></tr>
+<tr class="memdesc:a908d240686af7b2e81adfac9de87e606"><td class="mdescLeft">&#160;</td><td class="mdescRight">PID controller task. <br /></td></tr>
+<tr class="separator:a908d240686af7b2e81adfac9de87e606"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab33379dad9144fe673d41d8ed0a16116" id="r_ab33379dad9144fe673d41d8ed0a16116"><td class="memItemLeft" align="right" valign="top"><a id="ab33379dad9144fe673d41d8ed0a16116" name="ab33379dad9144fe673d41d8ed0a16116"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>motorControlTask</b> (void *pvParameters)</td></tr>
+<tr class="memdesc:ab33379dad9144fe673d41d8ed0a16116"><td class="mdescLeft">&#160;</td><td class="mdescRight">fuction: control motor <br /></td></tr>
+<tr class="separator:ab33379dad9144fe673d41d8ed0a16116"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80cdb5faaddb16a9c8145c4177a5a668" id="r_a80cdb5faaddb16a9c8145c4177a5a668"><td class="memItemLeft" align="right" valign="top"><a id="a80cdb5faaddb16a9c8145c4177a5a668" name="a80cdb5faaddb16a9c8145c4177a5a668"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>vServoTask</b> (void *pvParameters)</td></tr>
+<tr class="memdesc:a80cdb5faaddb16a9c8145c4177a5a668"><td class="mdescLeft">&#160;</td><td class="mdescRight">handle servo task <br /></td></tr>
+<tr class="separator:a80cdb5faaddb16a9c8145c4177a5a668"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a840291bc02cba5474a4cb46a9b9566fe" id="r_a840291bc02cba5474a4cb46a9b9566fe"><td class="memItemLeft" align="right" valign="top"><a id="a840291bc02cba5474a4cb46a9b9566fe" name="a840291bc02cba5474a4cb46a9b9566fe"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>main</b> (void)</td></tr>
 <tr class="memdesc:a840291bc02cba5474a4cb46a9b9566fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">main funtion <br /></td></tr>
@@ -175,22 +203,20 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>main</b> (void)</td></
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a05fe9081226ae566fc801d5b66c0b301" id="r_a05fe9081226ae566fc801d5b66c0b301"><td class="memItemLeft" align="right" valign="top"><a id="a05fe9081226ae566fc801d5b66c0b301" name="a05fe9081226ae566fc801d5b66c0b301"></a>
-atcmd_parser_t&#160;</td><td class="memItemRight" valign="bottom"><b>parser</b></td></tr>
-<tr class="memdesc:a05fe9081226ae566fc801d5b66c0b301"><td class="mdescLeft">&#160;</td><td class="mdescRight">define parser <br /></td></tr>
-<tr class="separator:a05fe9081226ae566fc801d5b66c0b301"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8ac68bf0cdf10f6a6b5fa2215d43960" id="r_ab8ac68bf0cdf10f6a6b5fa2215d43960"><td class="memItemLeft" align="right" valign="top"><a id="ab8ac68bf0cdf10f6a6b5fa2215d43960" name="ab8ac68bf0cdf10f6a6b5fa2215d43960"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>g_passcode</b> = 349</td></tr>
 <tr class="memdesc:ab8ac68bf0cdf10f6a6b5fa2215d43960"><td class="mdescLeft">&#160;</td><td class="mdescRight">define passcode <br /></td></tr>
 <tr class="separator:ab8ac68bf0cdf10f6a6b5fa2215d43960"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e52ff62a10f63554adc0c49dc112b46" id="r_a8e52ff62a10f63554adc0c49dc112b46"><td class="memItemLeft" align="right" valign="top"><a id="a8e52ff62a10f63554adc0c49dc112b46" name="a8e52ff62a10f63554adc0c49dc112b46"></a>
 volatile int&#160;</td><td class="memItemRight" valign="bottom"><b>g_dutycycle</b> = 16</td></tr>
+<tr class="memdesc:a8e52ff62a10f63554adc0c49dc112b46"><td class="mdescLeft">&#160;</td><td class="mdescRight">define dutycycle <br /></td></tr>
 <tr class="separator:a8e52ff62a10f63554adc0c49dc112b46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afdac0834d1245a183b18bd3c8ef8f0f2" id="r_afdac0834d1245a183b18bd3c8ef8f0f2"><td class="memItemLeft" align="right" valign="top">const atcmd_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afdac0834d1245a183b18bd3c8ef8f0f2">commands</a> []</td></tr>
-<tr class="memdesc:afdac0834d1245a183b18bd3c8ef8f0f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">handle the commands: AT+RESUME AT+HELLO=&lt;&gt; AT+PASSCODE? AT+PASSCODE=&lt;&gt; AT+DUTY=&lt;&gt;  <br /></td></tr>
-<tr class="separator:afdac0834d1245a183b18bd3c8ef8f0f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee226a3834d86506512b25f233f58f48" id="r_aee226a3834d86506512b25f233f58f48"><td class="memItemLeft" align="right" valign="top"><a id="aee226a3834d86506512b25f233f58f48" name="aee226a3834d86506512b25f233f58f48"></a>
+volatile uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>target_position</b> = 50</td></tr>
+<tr class="memdesc:aee226a3834d86506512b25f233f58f48"><td class="mdescLeft">&#160;</td><td class="mdescRight">target positions for each button actuation <br /></td></tr>
+<tr class="separator:aee226a3834d86506512b25f233f58f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30307c605abd592c91a65fbcb165d17e" id="r_a30307c605abd592c91a65fbcb165d17e"><td class="memItemLeft" align="right" valign="top"><a id="a30307c605abd592c91a65fbcb165d17e" name="a30307c605abd592c91a65fbcb165d17e"></a>
-volatile <a class="el" href="structPIDParameters.html">PIDParameters</a>&#160;</td><td class="memItemRight" valign="bottom"><b>pidParams</b> = {0.0f, 0.0f, 0.0f}</td></tr>
+volatile <a class="el" href="structPIDParameters.html">PIDParameters</a>&#160;</td><td class="memItemRight" valign="bottom"><b>pidParams</b> = {2.81f, 0.38f, 0.09f, 0.0f, 0.0f, NULL}</td></tr>
 <tr class="memdesc:a30307c605abd592c91a65fbcb165d17e"><td class="mdescLeft">&#160;</td><td class="mdescRight">init PID parameters <br /></td></tr>
 <tr class="separator:a30307c605abd592c91a65fbcb165d17e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -198,36 +224,7 @@ volatile <a class="el" href="structPIDParameters.html">PIDParameters</a>&#160;</
 <div class="textblock"><p>main function and some helper functions of lab 6 </p>
 <dl class="section date"><dt>Date</dt><dd>04/16/2024</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Yuhong Yao (yuhongy), Yiying Li (yiyingl4) </dd></dl>
-</div><h2 class="groupheader">Variable Documentation</h2>
-<a id="afdac0834d1245a183b18bd3c8ef8f0f2" name="afdac0834d1245a183b18bd3c8ef8f0f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afdac0834d1245a183b18bd3c8ef8f0f2">&#9670;&#160;</a></span>commands</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const atcmd_t commands[]</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    {<span class="stringliteral">&quot;RESUME&quot;</span>, <a class="code hl_function" href="#a306b635b870db1703cd49f9ffdd6db2a">handleResume</a>, NULL},</div>
-<div class="line">    {<span class="stringliteral">&quot;HELLO&quot;</span>, <a class="code hl_function" href="#a3160fb40dfc3a731401566948f355840">handleHello</a>, NULL},</div>
-<div class="line">    {<span class="stringliteral">&quot;PASSCODE?&quot;</span>, <a class="code hl_function" href="#ab870359dba98f81d09ab9f2d69e03f27">handlePasscode</a>, NULL},</div>
-<div class="line">    {<span class="stringliteral">&quot;PASSCODE&quot;</span>, <a class="code hl_function" href="#acbcf18524447268eab1328018e1cd773">handlePasscodeChange</a>, NULL},</div>
-<div class="line">    {<span class="stringliteral">&quot;DUTY&quot;</span>, <a class="code hl_function" href="#a49f53aae3b2b375d559af56107043fae">handleDutyCycleChange</a>, NULL}</div>
-<div class="line">}</div>
-<div class="ttc" id="amain_8c_html_a306b635b870db1703cd49f9ffdd6db2a"><div class="ttname"><a href="#a306b635b870db1703cd49f9ffdd6db2a">handleResume</a></div><div class="ttdeci">uint8_t handleResume(void *args, const char *cmdArgs)</div><div class="ttdoc">handle the AT+Resume command</div><div class="ttdef"><b>Definition</b> main.c:50</div></div>
-<div class="ttc" id="amain_8c_html_a3160fb40dfc3a731401566948f355840"><div class="ttname"><a href="#a3160fb40dfc3a731401566948f355840">handleHello</a></div><div class="ttdeci">uint8_t handleHello(void *args, const char *cmdArgs)</div><div class="ttdoc">handle the AT+Hello=&lt;&gt; command</div><div class="ttdef"><b>Definition</b> main.c:62</div></div>
-<div class="ttc" id="amain_8c_html_a49f53aae3b2b375d559af56107043fae"><div class="ttname"><a href="#a49f53aae3b2b375d559af56107043fae">handleDutyCycleChange</a></div><div class="ttdeci">uint8_t handleDutyCycleChange(void *args, const char *cmdArgs)</div><div class="ttdoc">handle the duty cycle change</div><div class="ttdef"><b>Definition</b> main.c:107</div></div>
-<div class="ttc" id="amain_8c_html_ab870359dba98f81d09ab9f2d69e03f27"><div class="ttname"><a href="#ab870359dba98f81d09ab9f2d69e03f27">handlePasscode</a></div><div class="ttdeci">uint8_t handlePasscode(void *args, const char *cmdArgs)</div><div class="ttdoc">handle the AT+Passcpde? command</div><div class="ttdef"><b>Definition</b> main.c:76</div></div>
-<div class="ttc" id="amain_8c_html_acbcf18524447268eab1328018e1cd773"><div class="ttname"><a href="#acbcf18524447268eab1328018e1cd773">handlePasscodeChange</a></div><div class="ttdeci">uint8_t handlePasscodeChange(void *args, const char *cmdArgs)</div><div class="ttdoc">handle the AT+Passcpde=&lt;&gt; command</div><div class="ttdef"><b>Definition</b> main.c:87</div></div>
-</div><!-- fragment -->
-<p>handle the commands: AT+RESUME AT+HELLO=&lt;&gt; AT+PASSCODE? AT+PASSCODE=&lt;&gt; AT+DUTY=&lt;&gt; </p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.8-->
 <!-- start footer part -->
 </div>

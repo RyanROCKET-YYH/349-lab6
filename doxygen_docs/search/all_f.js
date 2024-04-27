@@ -15,5 +15,6 @@ var searchData=
   ['sr1_12',['SR1',['../structi2c__reg__map.html#a6c09799a3cc12c20baa232b7d6300fd7',1,'i2c_reg_map']]],
   ['sr2_13',['SR2',['../structi2c__reg__map.html#aa703bbcd7ab0d68dfe04af8644820d97',1,'i2c_reg_map']]],
   ['swier_14',['swier',['../structexti__reg__map.html#a6e89386a03009422eb4f38a7f62d67ff',1,'exti_reg_map']]],
-  ['syscfg_5freg_5fmap_15',['syscfg_reg_map',['../structsyscfg__reg__map.html',1,'']]]
+  ['syscfg_5fbase_15',['SYSCFG_BASE',['../exti_8c.html#a62246020bf3b34b6a4d8d0e84ec79d3d',1,'exti.c']]],
+  ['syscfg_5freg_5fmap_16',['syscfg_reg_map',['../structsyscfg__reg__map.html',1,'']]]
 ];

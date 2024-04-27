@@ -57,8 +57,9 @@
 /** @brief EXTI15_10_INT_NUM */
 #define EXTI15_10_INT_NUM (40)
 
-/** @brief define exti flag */
+/** @brief define exti flag for motor moving forward */
 volatile uint8_t exti_flag_forward = 0;
+/** @brief define exti flag for motor moving backward */
 volatile uint8_t exti_flag_backward = 0;
 
 /** @brief syscfg */

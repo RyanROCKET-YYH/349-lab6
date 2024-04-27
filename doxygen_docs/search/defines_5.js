@@ -1,15 +1,17 @@
 var searchData=
 [
-  ['uart2_5fbase_0',['UART2_BASE',['../uart_8c.html#ac9998d643534960b684d45a60b998421',1,'uart.c']]],
-  ['uart_5fcr1_5frxneie_1',['UART_CR1_RXNEIE',['../uart_8c.html#afe1c2558c22141e9ad38d98aa791cf1a',1,'uart.c']]],
-  ['uart_5fcr1_5ftcie_2',['UART_CR1_TCIE',['../uart_8c.html#a15526e2c0d8ccb71276d083dd45b5001',1,'uart.c']]],
-  ['uart_5fcr1_5ftxeie_3',['UART_CR1_TXEIE',['../uart_8c.html#a4536e5cb1a100779c29eee5dcf724c07',1,'uart.c']]],
-  ['uart_5fen_4',['UART_EN',['../uart_8c.html#af1c2f103ac6e3183f08b39099fab2be9',1,'uart.c']]],
-  ['uart_5firq_5fnumber_5',['UART_IRQ_NUMBER',['../uart_8c.html#af2c8c86843a2a5e3ebd8abf60d5d948a',1,'uart.c']]],
-  ['uart_5fre_6',['UART_RE',['../uart_8c.html#addd80e03cfc2882dde455a76690ba6f3',1,'uart.c']]],
-  ['uart_5fsr_5frxne_7',['UART_SR_RXNE',['../uart_8c.html#a5079cbd6cf0bef29377a9c1664f5df48',1,'uart.c']]],
-  ['uart_5fsr_5ftxe_8',['UART_SR_TXE',['../uart_8c.html#a728317fa9449c33e31cf420cbb436f50',1,'uart.c']]],
-  ['uart_5fte_9',['UART_TE',['../uart_8c.html#ae1dc1c0349b53673bebf6b1f4535132f',1,'uart.c']]],
-  ['uartdiv_10',['UARTDIV',['../uart_8c.html#ae448b40090f646053a17ae1c855a22d2',1,'uart.c']]],
-  ['unused_11',['UNUSED',['../atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076',1,'UNUSED:&#160;atcmd.c'],['../servo_8c.html#addf5ec070e9499d36b7f2009ce736076',1,'UNUSED:&#160;servo.c'],['../uart_8c.html#addf5ec070e9499d36b7f2009ce736076',1,'UNUSED:&#160;uart.c']]]
+  ['i2c1_5fbase_0',['I2C1_BASE',['../i2c_8c.html#acd72dbffb1738ca87c838545c4eb85a3',1,'i2c.c']]],
+  ['i2c_5fccr_1',['I2C_CCR',['../i2c_8c.html#ae8b348d8b967ae6c53d1c6bd0fd404df',1,'i2c.c']]],
+  ['i2c_5fcf_2',['I2C_CF',['../i2c_8c.html#a659111ea6e7a221e33f23f647155eae4',1,'i2c.c']]],
+  ['i2c_5fcr1_5fack_3',['I2C_CR1_ACK',['../i2c_8c.html#af933b105259a4bc46a957576adb8d96d',1,'i2c.c']]],
+  ['i2c_5fcr1_5fstart_4',['I2C_CR1_START',['../i2c_8c.html#a2ca7f18dd5bc1130dbefae4ff8736143',1,'i2c.c']]],
+  ['i2c_5fcr1_5fstop_5',['I2C_CR1_STOP',['../i2c_8c.html#ace70293f3dfa24d448b600fc58e45223',1,'i2c.c']]],
+  ['i2c_5fcr1_5fswrst_6',['I2C_CR1_SWRST',['../i2c_8c.html#a8dc661ef13da02e5bcb943f2003d576d',1,'i2c.c']]],
+  ['i2c_5fen_7',['I2C_EN',['../i2c_8c.html#a3203976995e8f49bf0e401936b317bfd',1,'i2c.c']]],
+  ['i2c_5fsr1_5faddr_8',['I2C_SR1_ADDR',['../i2c_8c.html#a3db361a4d9dd84b187085a11d933b45d',1,'i2c.c']]],
+  ['i2c_5fsr1_5fbtf_9',['I2C_SR1_BTF',['../i2c_8c.html#afb279f85d78cfe5abd3eeb0b40a65ab1',1,'i2c.c']]],
+  ['i2c_5fsr1_5fsb_10',['I2C_SR1_SB',['../i2c_8c.html#a6935c920da59d755d0cf834548a70ec4',1,'i2c.c']]],
+  ['i2c_5fsr1_5ftxe_11',['I2C_SR1_TXE',['../i2c_8c.html#afdc4da49c163910203255e384591b6f7',1,'i2c.c']]],
+  ['i2c_5fsr2_5fbusy_12',['I2C_SR2_BUSY',['../i2c_8c.html#a3b1e75a82da73ae2873cff1cd27c3179',1,'i2c.c']]],
+  ['i2c_5ftrise_13',['I2C_TRISE',['../i2c_8c.html#a3eedde063fe0a886b35680892bffb7e7',1,'i2c.c']]]
 ];

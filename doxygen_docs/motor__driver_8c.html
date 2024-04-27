@@ -86,6 +86,9 @@ $(function() {
   <div class="headertitle"><div class="title">motor_driver.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Motor Controller - The Motor.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;motor_driver.h&gt;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
 <code>#include &lt;gpio.h&gt;</code><br />
@@ -96,24 +99,117 @@ $(function() {
 Macros</h2></td></tr>
 <tr class="memitem:addf5ec070e9499d36b7f2009ce736076" id="r_addf5ec070e9499d36b7f2009ce736076"><td class="memItemLeft" align="right" valign="top"><a id="addf5ec070e9499d36b7f2009ce736076" name="addf5ec070e9499d36b7f2009ce736076"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>UNUSED</b>&#160;&#160;&#160;__attribute__((unused))</td></tr>
+<tr class="memdesc:addf5ec070e9499d36b7f2009ce736076"><td class="mdescLeft">&#160;</td><td class="mdescRight">define unused <br /></td></tr>
 <tr class="separator:addf5ec070e9499d36b7f2009ce736076"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a2b31903e6d50159241a19f72228280cc" id="r_a2b31903e6d50159241a19f72228280cc"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b31903e6d50159241a19f72228280cc">encoder_read</a> (void)</td></tr>
+<tr class="memdesc:a2b31903e6d50159241a19f72228280cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forward declaration of encoder_read.  <br /></td></tr>
+<tr class="separator:a2b31903e6d50159241a19f72228280cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23a6186bf483f98cfe013667ec2bf147" id="r_a23a6186bf483f98cfe013667ec2bf147"><td class="memItemLeft" align="right" valign="top"><a id="a23a6186bf483f98cfe013667ec2bf147" name="a23a6186bf483f98cfe013667ec2bf147"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>motor_init</b> (<a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> gpio_port port_a, <a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> gpio_port port_b, <a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> gpio_port port_pwm, <a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> uint32_t channel_a, <a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> uint32_t channel_b, <a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> uint32_t channel_pwm, <a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> uint32_t timer, <a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> uint32_t timer_channel, <a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> uint32_t alt_timer)</td></tr>
+<tr class="memdesc:a23a6186bf483f98cfe013667ec2bf147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the GPIO pins for the H-Bridge/motor. You can set the PWM period to be 4000, at 1MHz (though you can really do anything you want). Initialize PWM with a duty cycle of 0. <br /></td></tr>
 <tr class="separator:a23a6186bf483f98cfe013667ec2bf147"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12d317cd88d507b46668b39bfc671cf2" id="r_a12d317cd88d507b46668b39bfc671cf2"><td class="memItemLeft" align="right" valign="top"><a id="a12d317cd88d507b46668b39bfc671cf2" name="a12d317cd88d507b46668b39bfc671cf2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>motor_set_dir</b> (<a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> uint32_t duty_cycle, <a class="el" href="atcmd_8c.html#addf5ec070e9499d36b7f2009ce736076">UNUSED</a> uint32_t direction)</td></tr>
-<tr class="separator:a12d317cd88d507b46668b39bfc671cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a891e008d498177b79d96188453ab81db" id="r_a891e008d498177b79d96188453ab81db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a891e008d498177b79d96188453ab81db">motor_set_dir</a> (gpio_port port_a, gpio_port port_b, uint32_t channel_a, uint32_t channel_b, uint32_t timer, uint32_t timer_channel, uint32_t duty_cycle, MotorDirection direction)</td></tr>
+<tr class="memdesc:a891e008d498177b79d96188453ab81db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the direction and speed (duty cycle of the timer pin) of the H-Bridge/motor.  <br /></td></tr>
+<tr class="separator:a891e008d498177b79d96188453ab81db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a010e7482c232c4c78a978aa942835978" id="r_a010e7482c232c4c78a978aa942835978"><td class="memItemLeft" align="right" valign="top"><a id="a010e7482c232c4c78a978aa942835978" name="a010e7482c232c4c78a978aa942835978"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>motor_position</b> ()</td></tr>
+<tr class="memdesc:a010e7482c232c4c78a978aa942835978"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return motor position. Call <a class="el" href="#a2b31903e6d50159241a19f72228280cc" title="Forward declaration of encoder_read.">encoder_read()</a>. <br /></td></tr>
 <tr class="separator:a010e7482c232c4c78a978aa942835978"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><dl class="section date"><dt>Date</dt><dd></dd></dl>
-<dl class="section author"><dt>Author</dt><dd></dd></dl>
-</div></div><!-- contents -->
+<div class="textblock"><p>Motor Controller - The Motor. </p>
+<dl class="section date"><dt>Date</dt><dd>04/18/2024</dd></dl>
+<dl class="section author"><dt>Author</dt><dd>Yuhong Yao (yuhongy), Yiying Li (yiyingl4) </dd></dl>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a2b31903e6d50159241a19f72228280cc" name="a2b31903e6d50159241a19f72228280cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b31903e6d50159241a19f72228280cc">&#9670;&#160;</a></span>encoder_read()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t encoder_read </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Forward declaration of encoder_read. </p>
+<p>Forward declaration of encoder_read. </p>
+
+</div>
+</div>
+<a id="a891e008d498177b79d96188453ab81db" name="a891e008d498177b79d96188453ab81db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a891e008d498177b79d96188453ab81db">&#9670;&#160;</a></span>motor_set_dir()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void motor_set_dir </td>
+          <td>(</td>
+          <td class="paramtype">gpio_port</td>          <td class="paramname"><span class="paramname"><em>port_a</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gpio_port</td>          <td class="paramname"><span class="paramname"><em>port_b</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>channel_a</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>channel_b</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>timer</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>timer_channel</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>duty_cycle</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">MotorDirection</td>          <td class="paramname"><span class="paramname"><em>direction</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the direction and speed (duty cycle of the timer pin) of the H-Bridge/motor. </p>
+<ul>
+<li>duty cycle: the percentage the motor is on (a value between 0 and 100).</li>
+<li>direction: FREE (0), FORWARD (1), BACKWARD (2), STOP (3) </li>
+</ul>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.8-->
 <!-- start footer part -->
 </div>

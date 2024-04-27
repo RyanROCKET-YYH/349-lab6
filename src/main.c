@@ -29,6 +29,7 @@
 #include <encoder.h>
 #include <motor_driver.h>
 
+/** @brief define gpio pin header file */
 #define YUHONG
 #ifdef YUHONG
 #include "gpio_pin_yuhong.h"
@@ -38,15 +39,18 @@
 
 /** @brief define passcode */
 int g_passcode = 349;
+/** @brief define dutycycle */
 volatile int g_dutycycle = 16;
 /** @brief define highest motor speed */
 #define MAX_MOTOR_SPEED 90
 /** @brief define lowest motor speed */
 #define MIN_MOTOR_SPEED 10
 
-/** @brief servo's states */
+/** @brief servo's states (degree) */
 #define DEGREE_0 0
+/** @brief servo's states */
 #define DEGREE_90 1
+/** @brief servo's states */
 #define DEGREE_180 2
 
 /** @brief clear the lcd */
@@ -116,6 +120,7 @@ volatile uint32_t target_position = 50; // Initial target position
 
 /** @brief marcos for motor positions and control */
 #define MIN_POS 0
+/** @brief marcos for motor positions and control */
 #define MAX_POS 1200
 
 /**
@@ -167,12 +172,17 @@ void vEncoderMonitorTask(void* pvParameters) {
 
 /** @brief PID parameters */
 typedef struct {
+    /** @brief PID parameters */
     float P;
+    /** @brief PID parameters */
     float I;
+    /** @brief PID parameters */
     float D;
-
+    /** @brief PID parameters */
     float integrator;
+    /** @brief PID parameters */
     float prevError;
+    /** @brief PID parameters */
     SemaphoreHandle_t mutex;
 } PIDParameters;
 
@@ -202,6 +212,7 @@ float absoluteValue(float x) {
     return (x < 0) ? -x : x;
 }
 
+/** @brief helper function of better path */
 int32_t findBestPath(uint32_t current_pos, uint32_t target_pos) {
     int32_t forward_path = (target_pos - current_pos + TICKS_PER_REV) % TICKS_PER_REV;
     int32_t backward_path = (current_pos - target_pos + TICKS_PER_REV) % TICKS_PER_REV;
@@ -279,6 +290,7 @@ void vPIDInputTask(void* pvParameters) {
     }
 }
 
+/** @brief fuction: control motor */
 void motorControlTask(void* pvParameters) {
     (void)pvParameters;
     while (1) {

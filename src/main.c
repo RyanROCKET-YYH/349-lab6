@@ -113,7 +113,6 @@ static void vUARTEchoTask(void *pvParameters) {
 /** @brief target positions for each button actuation */
 const uint32_t target_positions[3] = {100, 500, 900};
 volatile uint32_t target_position = 100; // Initial target position
-volatile bool updatePID = false; // Flag to signal when PID needs updating
 
 /**
  * @brief  handle external interrupt task
@@ -145,7 +144,6 @@ void vExtiTask(void* pvParameters) {
             }
             target_position = target_positions[current_index];
             printf("Target_position = %ld\n", target_position);
-            updatePID = true; // signal to update PID control
         }
         // FORWARD
         if (exti_flag_forward) {
@@ -157,7 +155,6 @@ void vExtiTask(void* pvParameters) {
             }
             target_position = target_positions[current_index];
             printf("Target_position = %ld\n", target_position);
-            updatePID = true;
         }
         vTaskDelay(pdMS_TO_TICKS(100)); // Delay to debounce the button
     }
@@ -173,7 +170,7 @@ void vEncoderMonitorTask(void* pvParameters) {
     while(1) {
         motor_pos = encoder_read();
         printf("Motor_position = %ld\n", motor_pos);
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(200));
     }
 }
 
@@ -192,7 +189,7 @@ typedef struct {
 volatile PIDParameters pidParams = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, NULL};
 
 /** @brief pid update function with simple algorithm */
-float UpdatePID(PIDParameters *pid, uint32_t error, float deltaTime) {
+float UpdatePID(PIDParameters *pid, int error, float deltaTime) {
     float pTerm, iTerm, dTerm;
     xSemaphoreTake(pid->mutex, portMAX_DELAY);
     // proportional term calculation
@@ -288,23 +285,21 @@ void vPIDInputTask(void* pvParameters) {
 void motorControlTask(void* pvParameters) {
     (void)pvParameters;
     while (1) {
-        if (updatePID) {
-            uint32_t curr_pos = encoder_read();
-            int32_t error = target_position - curr_pos;
-            float pid_output = UpdatePID((PIDParameters *)&pidParams, error, 0.001f);   // delta time is 1ms
-            printf("pid_out = %f\n", pid_output);
-            MotorDirection direction = pid_output >= 0 ? FORWARD : BACKWARD;
-            uint32_t motor_speed = absoluteValue(pid_output);
+        uint32_t curr_pos = encoder_read();
+        int32_t error = target_position - curr_pos;
+        float pid_output = UpdatePID((PIDParameters *)&pidParams, error, 0.01f);   // delta time is 1ms
+        printf("pid_out = %f\n", pid_output);
+        MotorDirection direction = pid_output >= 0 ? FORWARD : BACKWARD;
+        uint32_t motor_speed = absoluteValue(pid_output);
 
-            if (motor_speed > MAX_MOTOR_SPEED) {
-                motor_speed = MAX_MOTOR_SPEED;
-            } else if (motor_speed < MIN_MOTOR_SPEED) {
-                motor_speed = MIN_MOTOR_SPEED;
-            }
-
-            motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, motor_speed, direction);
-            updatePID = false;
+        if (motor_speed > MAX_MOTOR_SPEED) {
+            motor_speed = MAX_MOTOR_SPEED;
+        } else if (motor_speed < MIN_MOTOR_SPEED) {
+            motor_speed = MIN_MOTOR_SPEED;
         }
+
+        motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, motor_speed, direction);
+    
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
@@ -429,13 +424,13 @@ int main( void ) {
         tskIDLE_PRIORITY + 1, 
         NULL);
 
-    xTaskCreate(
-        vServoTask, 
-        "Servo", 
-        configMINIMAL_STACK_SIZE, 
-        NULL, 
-        tskIDLE_PRIORITY + 1, 
-        NULL);
+    // xTaskCreate(
+    //     vServoTask, 
+    //     "Servo", 
+    //     configMINIMAL_STACK_SIZE, 
+    //     NULL, 
+    //     tskIDLE_PRIORITY + 1, 
+    //     NULL);
 
     vTaskStartScheduler();
     

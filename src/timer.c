@@ -202,19 +202,19 @@ volatile uint8_t ledstate = 0;
  * tim3_irq_handler():
  * @brief  Set time 3 interrupt requestion handler
 */
-void tim3_irq_handler() {
-  struct tim2_5* tim3 = timer_base[3];
-  if (tim3->sr & TIM_SR_UIF) {
-    if (ledstate) {
-      gpio_clr(GPIO_A, 5);
-    } else {
-      gpio_set(GPIO_A, 5);
-    }
+// void tim3_irq_handler() {
+//   struct tim2_5* tim3 = timer_base[3];
+//   if (tim3->sr & TIM_SR_UIF) {
+//     if (ledstate) {
+//       gpio_clr(GPIO_A, 5);
+//     } else {
+//       gpio_set(GPIO_A, 5);
+//     }
     
-    ledstate = !ledstate;
-    timer_clear_interrupt_bit(3);
-  }
-}
+//     ledstate = !ledstate;
+//     timer_clear_interrupt_bit(3);
+//   }
+// }
 
 
 /**

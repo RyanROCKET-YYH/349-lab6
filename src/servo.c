@@ -13,6 +13,12 @@
 #include <timer.h>
 #include <nvic.h>
 #include <stdio.h>
+#define YIYING
+#ifdef YUHONG
+#include "gpio_pin_yuhong.h"
+#elif defined YIYING
+#include "gpio_pin_yiying.h"
+#endif
 
 /** @brief define UNUSE for unuse parameters */
 #define UNUSED __attribute__((unused))
@@ -50,7 +56,7 @@ typedef struct {
  * @brief Set the two servos parameters
  */
 ServoChannel servos[2] = {
-    {15, SERVO_PERIOD - 15, 0, GPIO_A, CHANNEL0_PIN, 0, 0},
+    {15, SERVO_PERIOD - 15, 0, SERVO_PORT, SERVO_PIN, 0, 0},
     {15, SERVO_PERIOD - 15, 0, GPIO_B, CHANNEL1_PIN, 0, 0}
 };
 
@@ -123,6 +129,34 @@ void tim5_irq_handler() {
     }
 }
 
+/**
+ * tim3_irq_handler():
+ * @brief Set time 3 interrupt requestion handler
+ *
+ */
+void tim3_irq_handler() {
+    struct tim2_5* tim3 = timer_base[3];
+    ServoChannel *s2 = &servos[0];
+    if (tim3->sr & TIM_SR_UIF) {
+        if (s2->enabled) {
+            s2->current_tick++;
+            if (s2->is_high) {
+                if (s2->current_tick >= s2->high_tick) {
+                    gpio_clr(SERVO_PORT, SERVO_PIN);
+                    s2->is_high = 0;
+                    s2->current_tick = 0;
+                }
+            } else {
+                if (s2->current_tick >= s2->low_tick) {
+                    gpio_set(SERVO_PORT, SERVO_PIN);
+                    s2->is_high = 1;
+                    s2->current_tick = 0;
+                }
+            }
+        } 
+        timer_clear_interrupt_bit(3);
+    }
+}
 
 /**
  * @brief Enable or disable servo motor control
@@ -142,7 +176,7 @@ int servo_enable(UNUSED uint8_t channel, UNUSED uint8_t enabled){
     sc->enabled = enabled;
     if (enabled) {
         if (channel == 0) {
-            timer_init(2, 100, 16);
+            timer_init(3, 100, 16);
         } else {
             timer_init(5, 100, 16);
         }
@@ -154,7 +188,7 @@ int servo_enable(UNUSED uint8_t channel, UNUSED uint8_t enabled){
         }
     } else {
         if (channel == 0) {
-            timer_disable(2);
+            timer_disable(3);
         } else {
             timer_disable(5);
         }

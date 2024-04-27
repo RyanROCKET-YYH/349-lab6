@@ -233,11 +233,7 @@ void vExtiTask(void* pvParameters) {
     // motor init
     motor_init(MORTO_IN1_PORT, MORTO_IN2_PORT, MOTOR_EN_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, MOTOR_EN_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, MOTOR_INIT_ALT);
     
-    // // LED
-    // gpio_init(GPIO_JP_PORT, GPIO_JP_PIN, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_LOW, PUPD_NONE, ALT0);
-
     // enable exti
-    encoder_init();
     enable_exti(BUTTON1_PORT, BUTTON1_PIN, RISING_FALLING_EDGE);
     enable_exti(BUTTON2_PORT, BUTTON2_PIN, RISING_FALLING_EDGE);
     while (1) {
@@ -273,7 +269,7 @@ void vExtiTask(void* pvParameters) {
                 motor_set_dir(MORTO_IN1_PORT, MORTO_IN2_PORT, MORTO_IN1_PIN, MORTO_IN2_PIN, PWM_TIMER, PWM_TIMER_CHANNEL, 0, STOP);
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(300)); // Delay to debounce the button
+        vTaskDelay(pdMS_TO_TICKS(100)); // Delay to debounce the button
     }
 }
 
@@ -283,11 +279,10 @@ void vExtiTask(void* pvParameters) {
 */
 void vEncoderMonitorTask(void* pvParameters) {
     (void)pvParameters;
-    encoder_init();
-    uint32_t enc_read = 0;
+    uint32_t motor_pos = 0;
     while(1) {
-        enc_read = encoder_read();
-        printf("encoder_read = %ld\n", enc_read);
+        motor_pos = motor_position();
+        printf("Motor_position = %ld\n", motor_pos);
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
@@ -342,10 +337,10 @@ void vPIDTask(void* pvParameters) {
     float integral = 0.0f;
     uint32_t target_position = 512; // 180 degree of the motor
 
-    encoder_init();
+    lcd_driver_init();
     uint32_t enc_read = 0;
     // uint32_t last_enc_read = 0;
-    lcd_driver_init();
+   
     for (;;) {
         for (int i = 0; i < 3; i++) {
             index = 0;
@@ -584,30 +579,13 @@ int main( void ) {
         tskIDLE_PRIORITY + 1, 
         NULL);
     
-    // xTaskCreate(
-    //     vHardPWM,
-    //     "HardPWM",
-    //     configMINIMAL_STACK_SIZE,
-    //     NULL,
-    //     tskIDLE_PRIORITY + 1,
-    //     NULL); 
-
-    // xTaskCreate(
-    //     vEncoderMonitorTask, 
-    //     "EnocderMonitor", 
-    //     configMINIMAL_STACK_SIZE, 
-    //     NULL, 
-    //     tskIDLE_PRIORITY + 1, 
-    //     NULL);
-
-    // xTaskCreate(
-    //     vMotorTask, 
-    //     "Motor", 
-    //     configMINIMAL_STACK_SIZE, 
-    //     NULL, 
-    //     tskIDLE_PRIORITY + 1, 
-    //     NULL);
-
+    xTaskCreate(
+        vEncoderMonitorTask, 
+        "EnocderMonitor", 
+        configMINIMAL_STACK_SIZE, 
+        NULL, 
+        tskIDLE_PRIORITY + 1, 
+        NULL);
 
     xTaskCreate(
         vServoTask, 

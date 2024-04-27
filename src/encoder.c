@@ -18,7 +18,7 @@
 #include <nvic.h>
 #include <arm.h>
 
-#define YIYING
+#define YUHONG
 #ifdef YUHONG
 #include "gpio_pin_yuhong.h"
 #elif defined YIYING

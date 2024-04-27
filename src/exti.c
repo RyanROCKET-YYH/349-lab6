@@ -9,7 +9,6 @@
  */
 
 #include <exti.h>
-#include <gpio.h>
 #include <rcc.h>
 #include <nvic.h>
 #include <stdio.h>
@@ -179,15 +178,20 @@ void EXTI9_5_IRQHandler(void) {
     struct exti_reg_map* exti = EXTI_BASE;
 
     // For YIYING's encoder
-    if (exti->pr & (EXTI_PR5 | EXTI_PR6)) { 
-        encoder_irq_handler();
-        exti_clear_pending_bit(5);
-        exti_clear_pending_bit(6);
+    // if (exti->pr & (EXTI_PR5 | EXTI_PR6)) { 
+    //     encoder_irq_handler();
+    //     exti_clear_pending_bit(5);
+    //     exti_clear_pending_bit(6);
+    // }
+
+    if (exti->pr & EXTI_PR7) {      // forward button
+        exti_flag_forward = 1;
+        exti_clear_pending_bit(7);
     }
 
-    if (exti->pr & EXTI_PR7) { 
-        // exti_flag = 1;
-        exti_clear_pending_bit(7);
+    if (exti->pr & EXTI_PR6) {      // backword button
+        exti_flag_backward = 1;
+        exti_clear_pending_bit(6);
     }
 
     // For YUHONG's encoder

@@ -10,46 +10,66 @@ import re
 # Open serial port
 ser = serial.Serial('/dev/cu.usbmodem145303', 115200)
 
+# Store tuples of (timestamp, motor_position)
 data = collections.deque(maxlen=500)
-pattern = re.compile(r"Motor_position = (\d+)")
+motor_pattern = re.compile(r"Motor_position = (\d+)")
+target_pattern = re.compile(r"Target_position = (\d+)")
+
+target_position = None  # Initialize target position
 
 def animate(i):
+    global target_position
     # If there's data available in the serial buffer
     while ser.in_waiting:
         try:
             line = ser.readline().decode('utf-8').strip()
-            match = pattern.search(line)
-            if match:
-                # Convert the first group to integer and append to data
-                position = int(match.group(1))
-                data.append(position)
+            motor_match = motor_pattern.search(line)
+            target_match = target_pattern.search(line)
+            
+            if motor_match:
+                position = int(motor_match.group(1))
+                timestamp = datetime.now().timestamp() * 1000  # Convert to milliseconds
+                data.append((timestamp, position))
+            
+            if target_match:
+                # Update target position
+                target_position = int(target_match.group(1))
+                
         except ValueError:
             continue
 
     ax.clear()
-    ax.plot(data)
-    plt.title('Motor Position Over Time')
+    if data:
+        timestamps, positions = zip(*data)
+        ax.plot(timestamps, positions, label='Motor Position')
+        if target_position is not None:
+            ax.axhline(y=target_position, color='r', label='Target Position')
+        
+        latest_time = data[-1][0]  # Latest timestamp in data
+        ax.set_xlim(latest_time - 1000, latest_time)
+
+    # Set fixed y-axis range
+    ax.set_ylim(0, 1200)
+    
+    plt.xlabel('Timestamp (ms)')
     plt.ylabel('Motor Position')
+    plt.legend()
 
 # Set up plot to call animate() function periodically
 fig, ax = plt.subplots()
-ani = FuncAnimation(fig, animate, interval=100)
+ani = FuncAnimation(fig, animate, interval=10)
 plt.tight_layout()
 plt.show()
 
 def main():
     # Log activity to a file
-    # Open log file
-    log = open('./lab6log.txt', 'w')
+    with open('./lab6log.txt', 'w') as log:
+        # Set up plot to call animate() function periodically
+        fig, ax = plt.subplots()
+        ani = FuncAnimation(fig, animate, fargs=(log,), interval=10)
+        plt.tight_layout()
+        plt.show()
 
-    # Set up plot to call animate() function periodically
-    fig, ax = plt.subplots()
-    ani = FuncAnimation(fig, animate, fargs=(log,), interval=100)
-    plt.tight_layout()
-    plt.show()
-
-    # Cleanup
-    log.close()
     ser.close()
 
 if __name__ == '__main__':
